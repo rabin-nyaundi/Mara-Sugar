@@ -2,6 +2,7 @@ package com.rabitech.ui
 
 import android.app.AlertDialog
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
@@ -30,6 +31,8 @@ class HarvestRequsetFragment : Fragment() {
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAuth: FirebaseAuth
 
+    private val REQ_CODE_IMAGE_GALLERY = 0
+    private var selectedImageUri  : Uri? = null
 
     private var firstname = ""
     private var lastname = ""
@@ -70,15 +73,15 @@ class HarvestRequsetFragment : Fragment() {
     private fun showSelectedPictureDialog() {
         val pictureDialog = context?.let { AlertDialog.Builder(it) }
         pictureDialog?.setTitle("Select Image Location")
-        val pictureDialogItems = arrayOf("Select imaeg fom galley", "Capture image")
+        val pictureDialogItems = arrayOf("Select Image from Galley", "Capture image")
         pictureDialog?.setItems(pictureDialogItems) { _, selectedOption ->
-            {
                 when (selectedOption) {
                     0 -> selectPhotoFromGallery()
-                    else -> captureImage()
+                    1 -> captureImage()
                 }
-            }
+
         }
+        pictureDialog?.show()
     }
 
     private fun captureImage() {
@@ -86,19 +89,26 @@ class HarvestRequsetFragment : Fragment() {
     }
 
     private fun selectPhotoFromGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK)
-        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        startActivityForResult(galleryIntent, 0)
+        val galleryIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
+            type= "image/*"
+        }
+        if(galleryIntent.resolveActivity(activity!!.packageManager)!=null){
+            startActivityForResult(galleryIntent, REQ_CODE_IMAGE_GALLERY)
+        }
+
+//        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+//        startActivityForResult(galleryIntent, 0)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == 0) {
+        if (requestCode == REQ_CODE_IMAGE_GALLERY){
             if (data != null) {
-                val imageUrl = data.data
+                val imageUri = data.data
+                selectedImageUri = imageUri
                 try {
                     val bitmapImage =
-                        MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUrl)
+                        MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUri)
                     binding.imageFarm.setImageBitmap(bitmapImage)
 
                 } catch (e: IOException) {
