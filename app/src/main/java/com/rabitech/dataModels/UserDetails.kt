@@ -1,6 +1,6 @@
 package com.rabitech.dataModels
 
-data class user_details
+data class UserDetails
     (
     val user_fname: String = "",
     val user_lname: String = "",

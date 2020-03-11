@@ -1,4 +1,6 @@
 package com.rabitech.dataModels
 
-class Users {
-}
+data class Users(
+    val user_email: String = "",
+    val user_category:String = ""
+)

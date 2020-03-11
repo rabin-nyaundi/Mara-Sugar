@@ -21,6 +21,7 @@
                 android:layout_height="wrap_content"
                 android:background="?attr/colorPrimary"
                 app:title="Home"
+                app:menu="@menu/sign_out_menu"
                 android:minHeight="?attr/actionBarSize"
                 android:theme="?attr/actionBarTheme"
                 android:layout_marginBottom="50dp"/>

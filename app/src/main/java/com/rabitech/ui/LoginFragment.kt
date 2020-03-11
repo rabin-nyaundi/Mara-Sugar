@@ -31,7 +31,7 @@ class LoginFragment : Fragment() {
             inflater, R.layout.fragment_login, container, false
         )
         mAuth = FirebaseAuth.getInstance()
-        checkLogedUser()
+
 
         binding.btnLogin.setOnClickListener {
             login()
@@ -42,9 +42,14 @@ class LoginFragment : Fragment() {
         return binding.root
     }
 
+    override fun onStart() {
+        super.onStart()
+        checkLogedUser()
+    }
+
     private fun checkLogedUser() {
         if (mAuth.currentUser != null){
-            findNavController().navigate(R.id.action_loginFragment_to_nav_graph_home)
+            findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
         }
     }
 
@@ -72,7 +77,7 @@ class LoginFragment : Fragment() {
         mAuth.signInWithEmailAndPassword(userEmail, userPass).addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(activity, "login successful", Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_loginFragment_to_nav_graph_home)
+                findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
             }
 
         }.addOnFailureListener {

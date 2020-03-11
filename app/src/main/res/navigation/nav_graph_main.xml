@@ -5,8 +5,6 @@
     android:id="@+id/nav_graph_main"
     app:startDestination="@id/loginFragment">
 
-    <include app:graph="@navigation/nav_graph_home"/>
-
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.rabitech.ui.LoginFragment"
@@ -14,10 +12,14 @@
         tools:layout="@layout/fragment_login">
         <action
             android:id="@+id/action_loginFragment_to_registerFragment"
-            app:destination="@id/registerFragment" />
+            app:destination="@id/registerFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false" />
         <action
-            android:id="@+id/action_loginFragment_to_nav_graph_home"
-            app:destination="@id/nav_graph_home" />
+            android:id="@+id/action_loginFragment_to_homeHostFragment"
+            app:destination="@id/homeHostFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -26,15 +28,19 @@
         tools:layout="@layout/fragment_register">
         <action
             android:id="@+id/action_registerFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
-        android:id="@+id/homeFragment"
-        android:name="com.rabitech.ui.HomeFragment"
-        android:label="HomeFragment"
-        tools:layout="@layout/fragment_home"/>
-    <fragment
-        android:id="@+id/harvestRequsetFragment2"
-        android:name="com.rabitech.ui.HarvestRequsetFragment"
-        android:label="HarvestRequsetFragment" />
+        android:id="@+id/homeHostFragment"
+        android:name="com.rabitech.uiHost.HomeHostFragment"
+        android:label="HomeHostFragment"
+        tools:layout="@layout/fragment_home_host">
+        <action
+            android:id="@+id/action_homeHostFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
 </navigation>
