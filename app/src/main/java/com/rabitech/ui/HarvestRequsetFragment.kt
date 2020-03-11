@@ -1,6 +1,9 @@
 package com.rabitech.ui
 
+import android.app.AlertDialog
+import android.content.Intent
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,10 +14,12 @@ import androidx.databinding.DataBindingUtil
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rabitech.R
+import com.rabitech.dataModels.LocationDetails
 import com.rabitech.dataModels.UserDetails
 import com.rabitech.databinding.FragmentHarvestRequsetBinding
 import kotlinx.android.synthetic.main.fragment_harvest_requset.*
 import kotlinx.android.synthetic.main.fragment_login.*
+import java.io.IOException
 
 /**
  * A simple [Fragment] subclass.
@@ -32,6 +37,10 @@ class HarvestRequsetFragment : Fragment() {
     private var email = ""
     private var id_number = ""
 
+    private var constituency = ""
+    private var ward = ""
+    private var landmark = ""
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -39,7 +48,8 @@ class HarvestRequsetFragment : Fragment() {
     ): View? {
 //        return inflater.inflate(R.layout.fragment_harvest_requset, container, false)
 
-        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_harvest_requset, container,false)
+        binding =
+            DataBindingUtil.inflate(inflater, R.layout.fragment_harvest_requset, container, false)
 
         mDatabase = FirebaseFirestore.getInstance()
 
@@ -49,9 +59,54 @@ class HarvestRequsetFragment : Fragment() {
             insertPersonalDetals()
 
         }
+        binding.imageFarm.setOnClickListener {
+            showSelectedPictureDialog()
+        }
 
         return binding.root
 
+    }
+
+    private fun showSelectedPictureDialog() {
+        val pictureDialog = context?.let { AlertDialog.Builder(it) }
+        pictureDialog?.setTitle("Select Image Location")
+        val pictureDialogItems = arrayOf("Select imaeg fom galley", "Capture image")
+        pictureDialog?.setItems(pictureDialogItems) { _, selectedOption ->
+            {
+                when (selectedOption) {
+                    0 -> selectPhotoFromGallery()
+                    else -> captureImage()
+                }
+            }
+        }
+    }
+
+    private fun captureImage() {
+
+    }
+
+    private fun selectPhotoFromGallery() {
+        val galleryIntent = Intent(Intent.ACTION_PICK)
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        startActivityForResult(galleryIntent, 0)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == 0) {
+            if (data != null) {
+                val imageUrl = data.data
+                try {
+                    val bitmapImage =
+                        MediaStore.Images.Media.getBitmap(context?.contentResolver, imageUrl)
+                    binding.imageFarm.setImageBitmap(bitmapImage)
+
+                } catch (e: IOException) {
+                    e.printStackTrace()
+                    Toast.makeText(context,"Failed to select image",Toast.LENGTH_LONG).show()
+                }
+            }
+        }
     }
 
     private fun insertPersonalDetals() {
@@ -60,6 +115,11 @@ class HarvestRequsetFragment : Fragment() {
         phone = binding.textPhone.text.toString()
         email = binding.textEmail.text.toString()
         id_number = binding.textIdcard.text.toString()
+
+        constituency = binding.textConstituency.text.toString()
+        ward = binding.textWard.text.toString()
+        landmark = binding.textLocation.text.toString()
+
 
         if (firstname.isEmpty()) {
             text_fname.error = "Please enter the first name"
@@ -86,8 +146,39 @@ class HarvestRequsetFragment : Fragment() {
             text_idcard.requestFocus()
             return
         }
+        if (constituency.isEmpty()) {
+            text_constituency.error = "Please enter the National ID Number"
+            text_idcard.requestFocus()
+            return
+        }
+        if (ward.isEmpty()) {
+            text_ward.error = "Please enter the National ID Number"
+            text_idcard.requestFocus()
+            return
+        }
+        if (landmark.isEmpty()) {
+            text_location.error = "Please enter the National ID Number"
+            text_idcard.requestFocus()
+            return
+        }
 
         insertDetails()
+        locationDetails()
+    }
+
+    private fun locationDetails() {
+        val locationDetails = LocationDetails(
+            constituency,
+            ward,
+            landmark
+        )
+        mDatabase.collection("LocationDetails").add(locationDetails).addOnSuccessListener {
+            Toast.makeText(activity, "Location details inserted sccessflly", Toast.LENGTH_LONG)
+                .show()
+
+        }.addOnFailureListener {
+            Toast.makeText(activity, "Faled to insert location details", Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun insertDetails() {
