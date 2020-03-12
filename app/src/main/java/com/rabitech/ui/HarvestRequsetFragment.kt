@@ -6,43 +6,48 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import com.rabitech.R
 import com.rabitech.dataModels.LocationDetails
 import com.rabitech.dataModels.UserDetails
 import com.rabitech.databinding.FragmentHarvestRequsetBinding
 import kotlinx.android.synthetic.main.fragment_harvest_requset.*
-import kotlinx.android.synthetic.main.fragment_login.*
 import java.io.IOException
 
-/**
- * A simple [Fragment] subclass.
- */
 class HarvestRequsetFragment : Fragment() {
 
     private lateinit var binding: FragmentHarvestRequsetBinding
     private lateinit var mDatabase: FirebaseFirestore
     private lateinit var mAuth: FirebaseAuth
+    private lateinit var storageReference: StorageReference
 
     private val REQ_CODE_IMAGE_GALLERY = 0
-    private var selectedImageUri  : Uri? = null
+    private var selectedImageUri: Uri? = null
 
+    //personal details
     private var firstname = ""
     private var lastname = ""
     private var phone = ""
     private var email = ""
     private var id_number = ""
 
+    //location details
     private var constituency = ""
     private var ward = ""
     private var landmark = ""
+
+    //farm details
+    private var farmSize = ""
+    private var downloadUrl = ""
 
 
     override fun onCreateView(
@@ -57,17 +62,45 @@ class HarvestRequsetFragment : Fragment() {
         mDatabase = FirebaseFirestore.getInstance()
 
         mAuth = FirebaseAuth.getInstance()
+        storageReference = FirebaseStorage.getInstance().reference
 
         binding.submitRequest.setOnClickListener {
             insertPersonalDetals()
+            uploadImage()
 
         }
         binding.imageFarm.setOnClickListener {
             showSelectedPictureDialog()
         }
+//        binding.btnImageUpload.setOnClickListener {
+//             uploadImage()
+//        }
 
         return binding.root
+    }
 
+    private fun uploadImage() {
+        if (selectedImageUri == null) {
+            return
+        } else {
+            val imageId = mAuth.currentUser?.uid
+            val reference = storageReference.child("LandImages/$imageId")
+            val uploadTask = reference.putFile(selectedImageUri!!)
+
+
+            val urlTask = uploadTask.continueWith { task ->
+                if (!task.isSuccessful) {
+                    task.exception?.let { exception ->
+                        throw exception
+                    }
+                }
+                reference.downloadUrl
+            }.addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    val downloadUrl = task.result
+                }
+            }
+        }
     }
 
     private fun showSelectedPictureDialog() {
@@ -75,10 +108,10 @@ class HarvestRequsetFragment : Fragment() {
         pictureDialog?.setTitle("Select Image Location")
         val pictureDialogItems = arrayOf("Select Image from Galley", "Capture image")
         pictureDialog?.setItems(pictureDialogItems) { _, selectedOption ->
-                when (selectedOption) {
-                    0 -> selectPhotoFromGallery()
-                    1 -> captureImage()
-                }
+            when (selectedOption) {
+                0 -> selectPhotoFromGallery()
+                1 -> captureImage()
+            }
 
         }
         pictureDialog?.show()
@@ -90,19 +123,18 @@ class HarvestRequsetFragment : Fragment() {
 
     private fun selectPhotoFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
-            type= "image/*"
+            type = "image/*"
         }
-        if(galleryIntent.resolveActivity(activity!!.packageManager)!=null){
+        if (galleryIntent.resolveActivity(activity!!.packageManager) != null) {
             startActivityForResult(galleryIntent, REQ_CODE_IMAGE_GALLERY)
         }
 
-//        MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-//        startActivityForResult(galleryIntent, 0)
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == REQ_CODE_IMAGE_GALLERY){
+        if (requestCode == REQ_CODE_IMAGE_GALLERY) {
             if (data != null) {
                 val imageUri = data.data
                 selectedImageUri = imageUri
@@ -113,22 +145,30 @@ class HarvestRequsetFragment : Fragment() {
 
                 } catch (e: IOException) {
                     e.printStackTrace()
-                    Toast.makeText(context,"Failed to select image",Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, "Failed to select image", Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
 
     private fun insertPersonalDetals() {
+
+        //farm
         firstname = binding.textFname.text.toString()
         lastname = binding.textLname.text.toString()
         phone = binding.textPhone.text.toString()
         email = binding.textEmail.text.toString()
         id_number = binding.textIdcard.text.toString()
 
+        //location
         constituency = binding.textConstituency.text.toString()
         ward = binding.textWard.text.toString()
-        landmark = binding.textLocation.text.toString()
+        landmark = binding.landmark.text.toString()
+
+        //farm
+        farmSize = binding.textFarmSize.text.toString()
+//        downloadUrl = binding.imageFarm.transitionName.toString()
+
 
 
         if (firstname.isEmpty()) {
@@ -148,7 +188,7 @@ class HarvestRequsetFragment : Fragment() {
         }
         if (email.isEmpty()) {
             text_email.error = "Please enter the email address"
-            text_email_login.requestFocus()
+            text_email.requestFocus()
             return
         }
         if (id_number.isEmpty()) {
@@ -157,18 +197,23 @@ class HarvestRequsetFragment : Fragment() {
             return
         }
         if (constituency.isEmpty()) {
-            text_constituency.error = "Please enter the National ID Number"
-            text_idcard.requestFocus()
+            text_constituency.error = "Please enter the the constituency"
+            text_constituency.requestFocus()
             return
         }
         if (ward.isEmpty()) {
-            text_ward.error = "Please enter the National ID Number"
-            text_idcard.requestFocus()
+            text_ward.error = "Please enter the ward"
+            text_ward.requestFocus()
             return
         }
         if (landmark.isEmpty()) {
-            text_location.error = "Please enter the National ID Number"
-            text_idcard.requestFocus()
+            text_location.error = "Please enter the nearest landmark"
+            text_location.requestFocus()
+            return
+        }
+        if (farmSize.isEmpty()) {
+            text_farm_size.error = "Please enter the farm size"
+            text_farm_size.requestFocus()
             return
         }
 
@@ -192,13 +237,7 @@ class HarvestRequsetFragment : Fragment() {
     }
 
     private fun insertDetails() {
-//
-//        val userdetails= mDatabase.collection("details").document()
-//        val details =UserDetails(
-//            mAuth.currentUser?.email.toString(),
-//        firstn
-//
-//        )
+
         val userdetails = UserDetails(
             firstname,
             lastname,
@@ -209,11 +248,15 @@ class HarvestRequsetFragment : Fragment() {
         )
         mDatabase.collection("UserDetails").add(userdetails)
             .addOnSuccessListener { documentReference ->
-//                Toast.makeText(context,"Successfully added to the database",Toast.LENGTH_LONG).show()
+
+                Toast.makeText(activity, "Personal details inserted sccessflly", Toast.LENGTH_LONG)
+
                 Log.d("@@@@insertion@@@@", "details added Successfully ${documentReference.id}")
 
             }.addOnFailureListener { exception ->
-//                Toast.makeText(context,"Failed to insert to database",Toast.LENGTH_LONG).show()
+
+                Toast.makeText(activity, "Faled to insert personal details", Toast.LENGTH_LONG)
+                    .show()
 
                 Log.d(
                     "@@@@insertion failedd@",

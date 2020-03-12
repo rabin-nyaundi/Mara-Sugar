@@ -38,7 +38,11 @@
         android:id="@+id/harvestRequsetFragment"
         android:name="com.rabitech.ui.HarvestRequsetFragment"
         android:label="HarvestRequsetFragment"
-        tools:layout="@layout/fragment_harvest_requset"/>
+        tools:layout="@layout/fragment_harvest_requset">
+        <action
+            android:id="@+id/action_harvestRequsetFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.rabitech.ui.NotificationsFragment"
