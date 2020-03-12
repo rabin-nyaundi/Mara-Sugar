@@ -1,6 +1,7 @@
 package com.rabitech.ui
 
 import android.app.AlertDialog
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -22,6 +23,7 @@ import com.rabitech.dataModels.UserDetails
 import com.rabitech.databinding.FragmentHarvestRequsetBinding
 import kotlinx.android.synthetic.main.fragment_harvest_requset.*
 import java.io.IOException
+
 
 class HarvestRequsetFragment : Fragment() {
 
@@ -60,9 +62,10 @@ class HarvestRequsetFragment : Fragment() {
             DataBindingUtil.inflate(inflater, R.layout.fragment_harvest_requset, container, false)
 
         mDatabase = FirebaseFirestore.getInstance()
-
         mAuth = FirebaseAuth.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
+
+        retrieveData()
 
         binding.submitRequest.setOnClickListener {
             insertPersonalDetals()
@@ -77,6 +80,35 @@ class HarvestRequsetFragment : Fragment() {
 //        }
 
         return binding.root
+    }
+
+    private fun retrieveData() {
+        val ref = mDatabase.collection("UserDetails").document("user")
+        ref.get()
+            .addOnSuccessListener { documentReference ->
+                if (documentReference != null) {
+//
+                    firstname = documentReference.getString("user_fname").toString()
+                    lastname = documentReference.getString("user_lname").toString()
+                    phone = documentReference.getString("user_phone").toString()
+                    email = documentReference.getString("user_email").toString()
+                    id_number = documentReference.getString("user_National_id").toString()
+
+                    binding.textFname.setText(firstname)
+                    binding.textLname.setText(lastname)
+                    binding.textPhone.setText(phone)
+                    binding.textEmail.setText(email)
+                    binding.textIdcard.setText(id_number)
+
+                    Log.d(TAG, "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}")
+                    Log.d(TAG, "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}"+firstname)
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
     }
 
     private fun uploadImage() {
@@ -227,7 +259,7 @@ class HarvestRequsetFragment : Fragment() {
             ward,
             landmark
         )
-        mDatabase.collection("LocationDetails").add(locationDetails).addOnSuccessListener {
+        mDatabase.collection("LocationDetails").add(locationDetails).addOnSuccessListener {document->
             Toast.makeText(activity, "Location details inserted sccessflly", Toast.LENGTH_LONG)
                 .show()
 
@@ -246,12 +278,12 @@ class HarvestRequsetFragment : Fragment() {
             id_number
 
         )
-        mDatabase.collection("UserDetails").add(userdetails)
+        mDatabase.collection("UserDetails").document("user").set(userdetails)
             .addOnSuccessListener { documentReference ->
 
                 Toast.makeText(activity, "Personal details inserted sccessflly", Toast.LENGTH_LONG)
 
-                Log.d("@@@@insertion@@@@", "details added Successfully ${documentReference.id}")
+                Log.d("@@@@insertion@@@@", "details added Successfully ${documentReference}")
 
             }.addOnFailureListener { exception ->
 
