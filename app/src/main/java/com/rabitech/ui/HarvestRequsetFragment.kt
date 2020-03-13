@@ -18,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.rabitech.R
+import com.rabitech.dataModels.FarmDetails
 import com.rabitech.dataModels.LocationDetails
 import com.rabitech.dataModels.UserDetails
 import com.rabitech.databinding.FragmentHarvestRequsetBinding
@@ -66,6 +67,7 @@ class HarvestRequsetFragment : Fragment() {
         storageReference = FirebaseStorage.getInstance().reference
 
         retrieveData()
+        retrieveLocation()
 
         binding.submitRequest.setOnClickListener {
             insertPersonalDetals()
@@ -82,17 +84,50 @@ class HarvestRequsetFragment : Fragment() {
         return binding.root
     }
 
+    private fun retrieveLocation() {
+        val userId = mAuth.currentUser!!.uid
+
+        val ref = mDatabase.collection("LocationDetails").document(userId)
+        ref.get().addOnSuccessListener { document ->
+
+            if (document != null) {
+
+                constituency = document.getString("constituency").toString()
+                ward = document.getString("ward").toString()
+                landmark = document.getString("location").toString()
+
+                binding.textConstituency.setText(constituency)
+                binding.textWard.setText(ward)
+                binding.landmark.setText(landmark)
+
+                Log.d(
+                    TAG,
+                    "@@@@@@@@@@@@@@@@@@@@@@@@@@data@@@@@@@@@@@@: ${document.data}"
+                )
+            }
+        }
+    }
+
     private fun retrieveData() {
-        val ref = mDatabase.collection("UserDetails").document("user")
+
+        val userId = mAuth.currentUser!!.uid
+        val user_email = mAuth.currentUser!!.email
+
+        val ref = mDatabase.collection("UserDetails").document(userId)
         ref.get()
             .addOnSuccessListener { documentReference ->
                 if (documentReference != null) {
-//
+
+                    //personal details
                     firstname = documentReference.getString("user_fname").toString()
                     lastname = documentReference.getString("user_lname").toString()
                     phone = documentReference.getString("user_phone").toString()
-                    email = documentReference.getString("user_email").toString()
+                    email = user_email.toString()
+//                        documentReference.getString("user_email").toString()
                     id_number = documentReference.getString("user_National_id").toString()
+
+                    //retrieve farm details
+//                    farmSize = documentReference.getString("").toString()
 
                     binding.textFname.setText(firstname)
                     binding.textLname.setText(lastname)
@@ -100,8 +135,15 @@ class HarvestRequsetFragment : Fragment() {
                     binding.textEmail.setText(email)
                     binding.textIdcard.setText(id_number)
 
-                    Log.d(TAG, "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}")
-                    Log.d(TAG, "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}"+firstname)
+
+                    Log.d(
+                        TAG,
+                        "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}"
+                    )
+                    Log.d(
+                        TAG,
+                        "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}" + firstname
+                    )
                 } else {
                     Log.d(TAG, "No such document")
                 }
@@ -185,22 +227,21 @@ class HarvestRequsetFragment : Fragment() {
 
     private fun insertPersonalDetals() {
 
-        //farm
+        //farm details
         firstname = binding.textFname.text.toString()
         lastname = binding.textLname.text.toString()
         phone = binding.textPhone.text.toString()
         email = binding.textEmail.text.toString()
         id_number = binding.textIdcard.text.toString()
 
-        //location
+        //location details
         constituency = binding.textConstituency.text.toString()
         ward = binding.textWard.text.toString()
         landmark = binding.landmark.text.toString()
 
-        //farm
+        //farm details
         farmSize = binding.textFarmSize.text.toString()
 //        downloadUrl = binding.imageFarm.transitionName.toString()
-
 
 
         if (firstname.isEmpty()) {
@@ -251,24 +292,57 @@ class HarvestRequsetFragment : Fragment() {
 
         insertDetails()
         locationDetails()
+        insertFarmDetails()
+    }
+
+    private fun insertFarmDetails() {
+
+        val farmDetails = FarmDetails(
+            farmSize,
+            downloadUrl
+
+        )
+
+        mDatabase.collection("FarmDetails").document().set(farmDetails)
+            .addOnSuccessListener { document ->
+                Toast.makeText(activity, "Farm details inserted successfully", Toast.LENGTH_LONG)
+                    .show()
+
+            }.addOnFailureListener { exception ->
+
+                Toast.makeText(activity, "Failed to insert farm details", Toast.LENGTH_LONG).show()
+
+            }
     }
 
     private fun locationDetails() {
+
+        val userId = mAuth.currentUser!!.uid
+
         val locationDetails = LocationDetails(
             constituency,
             ward,
             landmark
         )
-        mDatabase.collection("LocationDetails").add(locationDetails).addOnSuccessListener {document->
-            Toast.makeText(activity, "Location details inserted sccessflly", Toast.LENGTH_LONG)
-                .show()
 
-        }.addOnFailureListener {
-            Toast.makeText(activity, "Faled to insert location details", Toast.LENGTH_LONG).show()
-        }
+        mDatabase.collection("LocationDetails").document(userId).set(locationDetails)
+            .addOnSuccessListener { document ->
+                Toast.makeText(
+                    activity,
+                    "Location details inserted successfully",
+                    Toast.LENGTH_LONG
+                )
+                    .show()
+
+            }.addOnFailureListener { exception ->
+                Toast.makeText(activity, "Failed to insert location details", Toast.LENGTH_LONG)
+                    .show()
+            }
     }
 
     private fun insertDetails() {
+
+        val userId = mAuth.currentUser!!.uid
 
         val userdetails = UserDetails(
             firstname,
@@ -278,12 +352,12 @@ class HarvestRequsetFragment : Fragment() {
             id_number
 
         )
-        mDatabase.collection("UserDetails").document("user").set(userdetails)
-            .addOnSuccessListener { documentReference ->
+        mDatabase.collection("UserDetails").document(userId).set(userdetails)
+            .addOnSuccessListener { document ->
 
                 Toast.makeText(activity, "Personal details inserted sccessflly", Toast.LENGTH_LONG)
 
-                Log.d("@@@@insertion@@@@", "details added Successfully ${documentReference}")
+                Log.d("@@@@insertion@@@@", "details added Successfully ${document}")
 
             }.addOnFailureListener { exception ->
 
@@ -291,7 +365,7 @@ class HarvestRequsetFragment : Fragment() {
                     .show()
 
                 Log.d(
-                    "@@@@insertion failedd@",
+                    "@@@@insertion failed@",
                     "User details insertion failed ${exception.localizedMessage}"
                 )
 
