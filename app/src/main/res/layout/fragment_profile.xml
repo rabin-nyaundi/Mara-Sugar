@@ -1,14 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.ProfileFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".ui.ProfileFragment">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/textV_fname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="32dp"
+            android:text="First Name"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView_fname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="32dp"
+            android:text="Your First Name"
+            app:layout_constraintStart_toEndOf="@+id/textV_fname"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textV_lname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Last name"
+            app:layout_constraintStart_toStartOf="@+id/textV_fname"
+            app:layout_constraintTop_toBottomOf="@+id/textV_fname" />
+
+        <TextView
+            android:id="@+id/textView_lname"
+            android:layout_width="66dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="60dp"
+            android:layout_marginTop="36dp"
+            android:text="Phone"
+            app:layout_constraintStart_toEndOf="@+id/textV_lname"
+            app:layout_constraintTop_toBottomOf="@+id/textView_fname" />
+
+        <TextView
+            android:id="@+id/textV_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginEnd="24dp"
+            android:text="Email"
+            app:layout_constraintEnd_toStartOf="@+id/textV_fname"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/textV_lname"
+            app:layout_constraintTop_toBottomOf="@+id/textV_lname" />
+
+        <TextView
+            android:id="@+id/textV_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Phone"
+            app:layout_constraintStart_toStartOf="@+id/textV_email"
+            app:layout_constraintTop_toBottomOf="@+id/textV_email" />
+
+        <TextView
+            android:id="@+id/textV_id_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="National ID"
+            app:layout_constraintStart_toStartOf="@+id/textV_phone"
+            app:layout_constraintTop_toBottomOf="@+id/textV_phone" />
+
+        <TextView
+            android:id="@+id/textView_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="National ID"
+            app:layout_constraintStart_toStartOf="@+id/textView_lname"
+            app:layout_constraintTop_toBottomOf="@+id/textView_lname" />
+
+        <TextView
+            android:id="@+id/textView_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="National ID"
+            app:layout_constraintStart_toStartOf="@+id/textView_email"
+            app:layout_constraintTop_toBottomOf="@+id/textView_email" />
+
+        <TextView
+            android:id="@+id/textView_id_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="National ID"
+            app:layout_constraintStart_toStartOf="@+id/textView_phone"
+            app:layout_constraintTop_toBottomOf="@+id/textView_phone" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
