@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -24,6 +25,7 @@ import com.rabitech.dataModels.UserDetails
 import com.rabitech.databinding.FragmentHarvestRequsetBinding
 import kotlinx.android.synthetic.main.fragment_harvest_requset.*
 import java.io.IOException
+
 
 
 class HarvestRequsetFragment : Fragment() {
@@ -42,6 +44,8 @@ class HarvestRequsetFragment : Fragment() {
     private var phone = ""
     private var email = ""
     private var id_number = ""
+    private var time_request_sent = ""
+
 
     //location details
     private var constituency = ""
@@ -51,6 +55,7 @@ class HarvestRequsetFragment : Fragment() {
     //farm details
     private var farmSize = ""
     private var downloadUrl = ""
+    private var status_of_request ="Awaiting Approval"
 
 
     override fun onCreateView(
@@ -66,22 +71,69 @@ class HarvestRequsetFragment : Fragment() {
         mAuth = FirebaseAuth.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
 
-        retrieveData()
+        retrievePersonalData()
         retrieveLocation()
 
         binding.submitRequest.setOnClickListener {
-            insertPersonalDetals()
+            validateUserInput()
             uploadImage()
 
         }
         binding.imageFarm.setOnClickListener {
             showSelectedPictureDialog()
         }
-//        binding.btnImageUpload.setOnClickListener {
-//             uploadImage()
-//        }
+
+        binding.btnEdit.setOnClickListener {
+            editField()
+        }
 
         return binding.root
+    }
+
+
+// retrieve details from the database
+
+    private fun retrievePersonalData() {
+
+        val userId = mAuth.currentUser!!.uid
+        val user_email = mAuth.currentUser!!.email
+
+        val ref = mDatabase.collection("UserDetails").document(userId)
+        ref.get()
+            .addOnSuccessListener { documentReference ->
+                if (documentReference != null) {
+
+                    //personal details
+                    firstname = documentReference.getString("user_fname").toString()
+                    lastname = documentReference.getString("user_lname").toString()
+                    phone = documentReference.getString("user_phone").toString()
+                    email = user_email.toString()
+                    id_number = documentReference.getString("user_National_id").toString()
+
+                    binding.textFname.setText(firstname)
+                    binding.textLname.setText(lastname)
+                    binding.textPhone.setText(phone)
+                    binding.textEmail.setText(email)
+                    binding.textIdcard.setText(id_number)
+
+                    disableField()
+
+
+                    Log.d(
+                        TAG,
+                        "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}"
+                    )
+                    Log.d(
+                        TAG,
+                        "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}" + firstname
+                    )
+                } else {
+                    Log.d(TAG, "No such document")
+                }
+            }
+            .addOnFailureListener { exception ->
+                Log.d(TAG, "get failed with ", exception)
+            }
     }
 
     private fun retrieveLocation() {
@@ -108,50 +160,27 @@ class HarvestRequsetFragment : Fragment() {
         }
     }
 
-    private fun retrieveData() {
+    //Disable and enable edit text fields
+    private fun editField() {
 
-        val userId = mAuth.currentUser!!.uid
-        val user_email = mAuth.currentUser!!.email
-
-        val ref = mDatabase.collection("UserDetails").document(userId)
-        ref.get()
-            .addOnSuccessListener { documentReference ->
-                if (documentReference != null) {
-
-                    //personal details
-                    firstname = documentReference.getString("user_fname").toString()
-                    lastname = documentReference.getString("user_lname").toString()
-                    phone = documentReference.getString("user_phone").toString()
-                    email = user_email.toString()
-//                        documentReference.getString("user_email").toString()
-                    id_number = documentReference.getString("user_National_id").toString()
-
-                    //retrieve farm details
-//                    farmSize = documentReference.getString("").toString()
-
-                    binding.textFname.setText(firstname)
-                    binding.textLname.setText(lastname)
-                    binding.textPhone.setText(phone)
-                    binding.textEmail.setText(email)
-                    binding.textIdcard.setText(id_number)
-
-
-                    Log.d(
-                        TAG,
-                        "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}"
-                    )
-                    Log.d(
-                        TAG,
-                        "@@@@@@@@@@@@@DocumentSnapshot data@@@@@@@@@@@@: ${documentReference.data}" + firstname
-                    )
-                } else {
-                    Log.d(TAG, "No such document")
-                }
-            }
-            .addOnFailureListener { exception ->
-                Log.d(TAG, "get failed with ", exception)
-            }
+        binding.textFname.setFocusableInTouchMode(true)
+        binding.textLname.setFocusableInTouchMode(true)
+        binding.textPhone.setFocusableInTouchMode(true)
+        binding.textEmail.setFocusableInTouchMode(true)
+        binding.textIdcard.setFocusableInTouchMode(true)
     }
+
+    private fun disableField() {
+
+        binding.textFname.setFocusable(false)
+        binding.textLname.setFocusable(false)
+        binding.textPhone.setFocusable(false)
+        binding.textEmail.setFocusable(false)
+        binding.textIdcard.setFocusable(false)
+
+    }
+
+    //select and upload image from gallery
 
     private fun uploadImage() {
         if (selectedImageUri == null) {
@@ -191,9 +220,6 @@ class HarvestRequsetFragment : Fragment() {
         pictureDialog?.show()
     }
 
-    private fun captureImage() {
-
-    }
 
     private fun selectPhotoFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_GET_CONTENT).apply {
@@ -225,7 +251,12 @@ class HarvestRequsetFragment : Fragment() {
         }
     }
 
-    private fun insertPersonalDetals() {
+    private fun captureImage() {
+
+    }
+
+    //Validate user inputs
+    private fun validateUserInput() {
 
         //farm details
         firstname = binding.textFname.text.toString()
@@ -233,6 +264,7 @@ class HarvestRequsetFragment : Fragment() {
         phone = binding.textPhone.text.toString()
         email = binding.textEmail.text.toString()
         id_number = binding.textIdcard.text.toString()
+        time_request_sent = Timestamp.now().toString()
 
         //location details
         constituency = binding.textConstituency.text.toString()
@@ -295,51 +327,7 @@ class HarvestRequsetFragment : Fragment() {
         insertFarmDetails()
     }
 
-    private fun insertFarmDetails() {
-
-        val farmDetails = FarmDetails(
-            farmSize,
-            downloadUrl
-
-        )
-
-        mDatabase.collection("FarmDetails").document().set(farmDetails)
-            .addOnSuccessListener { document ->
-                Toast.makeText(activity, "Farm details inserted successfully", Toast.LENGTH_LONG)
-                    .show()
-
-            }.addOnFailureListener { exception ->
-
-                Toast.makeText(activity, "Failed to insert farm details", Toast.LENGTH_LONG).show()
-
-            }
-    }
-
-    private fun locationDetails() {
-
-        val userId = mAuth.currentUser!!.uid
-
-        val locationDetails = LocationDetails(
-            constituency,
-            ward,
-            landmark
-        )
-
-        mDatabase.collection("LocationDetails").document(userId).set(locationDetails)
-            .addOnSuccessListener { document ->
-                Toast.makeText(
-                    activity,
-                    "Location details inserted successfully",
-                    Toast.LENGTH_LONG
-                )
-                    .show()
-
-            }.addOnFailureListener { exception ->
-                Toast.makeText(activity, "Failed to insert location details", Toast.LENGTH_LONG)
-                    .show()
-            }
-    }
-
+    // insert personal , location and farm details to firestore
     private fun insertDetails() {
 
         val userId = mAuth.currentUser!!.uid
@@ -349,7 +337,9 @@ class HarvestRequsetFragment : Fragment() {
             lastname,
             phone,
             email,
-            id_number
+            id_number,
+            time_request_sent,
+            status_of_request
 
         )
         mDatabase.collection("UserDetails").document(userId).set(userdetails)
@@ -372,5 +362,49 @@ class HarvestRequsetFragment : Fragment() {
             }
     }
 
+    private fun locationDetails() {
+
+        val userId = mAuth.currentUser!!.uid
+
+        val locationDetails = LocationDetails(
+            constituency,
+            ward,
+            landmark
+        )
+
+        mDatabase.collection("LocationDetails").document(userId).set(locationDetails)
+            .addOnSuccessListener { document ->
+                Toast.makeText(
+                        activity,
+                        "Location details inserted successfully",
+                        Toast.LENGTH_LONG
+                    )
+                    .show()
+
+            }.addOnFailureListener { exception ->
+                Toast.makeText(activity, "Failed to insert location details", Toast.LENGTH_LONG)
+                    .show()
+            }
+    }
+
+    private fun insertFarmDetails() {
+
+        val farmDetails = FarmDetails(
+            farmSize,
+            downloadUrl
+
+        )
+
+        mDatabase.collection("FarmDetails").document().set(farmDetails)
+            .addOnSuccessListener { document ->
+                Toast.makeText(activity, "Farm details inserted successfully", Toast.LENGTH_LONG)
+                    .show()
+
+            }.addOnFailureListener { exception ->
+
+                Toast.makeText(activity, "Failed to insert farm details", Toast.LENGTH_LONG).show()
+
+            }
+    }
 
 }

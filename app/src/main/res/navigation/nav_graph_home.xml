@@ -23,15 +23,15 @@
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment2"
             app:destination="@id/notificationsFragment"
-            app:popUpTo="@id/homeFragment" />
+            app:popUpTo="@id/nav_graph_home" />
         <action
             android:id="@+id/action_homeFragment_to_harvestRequsetFragment2"
             app:destination="@id/harvestRequsetFragment"
-            app:popUpTo="@id/homeFragment" />
+            app:popUpTo="@id/nav_graph_home" />
         <action
             android:id="@+id/action_homeFragment_to_mainActivity"
             app:destination="@id/mainActivity"
-            app:popUpTo="@id/profileFragment"
+            app:popUpTo="@id/homeFragment"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
