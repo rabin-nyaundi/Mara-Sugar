@@ -1,16 +1,16 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
     </style>
 
     <style name="textHint" parent="TextAppearance.Design.Hint">
-        <item name="android:textColor">@color/colorOrange</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/primary_text</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <!--My splash screen-->
     <style name="AppTheme.splashscreen" parent="Theme.MaterialComponents.Light.NoActionBar">
@@ -23,6 +23,11 @@
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginEnd">8dp</item>
+    </style>
+
+    <style name="CustomProgressBarTheme">
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
 </resources>

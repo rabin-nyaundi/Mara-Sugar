@@ -19,13 +19,13 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.rabitech.R
+import com.rabitech.dataModels.CustomLoading
 import com.rabitech.dataModels.FarmDetails
 import com.rabitech.dataModels.LocationDetails
 import com.rabitech.dataModels.UserDetails
 import com.rabitech.databinding.FragmentHarvestRequsetBinding
 import kotlinx.android.synthetic.main.fragment_harvest_requset.*
 import java.io.IOException
-
 
 
 class HarvestRequsetFragment : Fragment() {
@@ -57,6 +57,8 @@ class HarvestRequsetFragment : Fragment() {
     private var downloadUrl = ""
     private var status_of_request ="Awaiting Approval"
 
+    val progressBar = CustomLoading()
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,8 +77,10 @@ class HarvestRequsetFragment : Fragment() {
         retrieveLocation()
 
         binding.submitRequest.setOnClickListener {
+            progressBar.show(this.context!!,"Sending request")
             validateUserInput()
             uploadImage()
+            progressBar.loadingDialog.dismiss()
 
         }
         binding.imageFarm.setOnClickListener {
@@ -182,6 +186,79 @@ class HarvestRequsetFragment : Fragment() {
 
     //select and upload image from gallery
 
+    //Validate user inputs
+    private fun validateUserInput() {
+
+        //farm details
+        firstname = binding.textFname.text.toString()
+        lastname = binding.textLname.text.toString()
+        phone = binding.textPhone.text.toString()
+        email = binding.textEmail.text.toString()
+        id_number = binding.textIdcard.text.toString()
+//        time_request_sent = Timestamp.now()
+
+        //location details
+        constituency = binding.textConstituency.text.toString()
+        ward = binding.textWard.text.toString()
+        landmark = binding.landmark.text.toString()
+
+        //farm details
+        farmSize = binding.textFarmSize.text.toString()
+//        downloadUrl = binding.imageFarm.transitionName.toString()
+
+        if (firstname.isEmpty()) {
+            text_fname.error = "Please enter the first name"
+            text_fname.requestFocus()
+            return
+        }
+        if (lastname.isEmpty()) {
+            text_lname.error = "Please enter the last name"
+            text_lname.requestFocus()
+            return
+        }
+        if (phone.isEmpty()) {
+            text_phone.error = "Please enter the phone number"
+            text_phone.requestFocus()
+            return
+        }
+        if (email.isEmpty()) {
+            text_email.error = "Please enter the email address"
+            text_email.requestFocus()
+            return
+        }
+        if (id_number.isEmpty()) {
+            text_idcard.error = "Please enter the National ID Number"
+            text_idcard.requestFocus()
+            return
+        }
+        if (constituency.isEmpty()) {
+            text_constituency.error = "Please enter the the constituency"
+            text_constituency.requestFocus()
+            return
+        }
+        if (ward.isEmpty()) {
+            text_ward.error = "Please enter the ward"
+            text_ward.requestFocus()
+            return
+        }
+        if (landmark.isEmpty()) {
+            text_location.error = "Please enter the nearest landmark"
+            text_location.requestFocus()
+            return
+        }
+        if (farmSize.isEmpty()) {
+            text_farm_size.error = "Please enter the farm size"
+            text_farm_size.requestFocus()
+            return
+        }
+
+        insertDetails()
+        locationDetails()
+        insertFarmDetails()
+    }
+
+
+
     private fun uploadImage() {
         if (selectedImageUri == null) {
             return
@@ -255,78 +332,6 @@ class HarvestRequsetFragment : Fragment() {
 
     }
 
-    //Validate user inputs
-    private fun validateUserInput() {
-
-        //farm details
-        firstname = binding.textFname.text.toString()
-        lastname = binding.textLname.text.toString()
-        phone = binding.textPhone.text.toString()
-        email = binding.textEmail.text.toString()
-        id_number = binding.textIdcard.text.toString()
-        time_request_sent = Timestamp.now().toString()
-
-        //location details
-        constituency = binding.textConstituency.text.toString()
-        ward = binding.textWard.text.toString()
-        landmark = binding.landmark.text.toString()
-
-        //farm details
-        farmSize = binding.textFarmSize.text.toString()
-//        downloadUrl = binding.imageFarm.transitionName.toString()
-
-
-        if (firstname.isEmpty()) {
-            text_fname.error = "Please enter the first name"
-            text_fname.requestFocus()
-            return
-        }
-        if (lastname.isEmpty()) {
-            text_lname.error = "Please enter the last name"
-            text_lname.requestFocus()
-            return
-        }
-        if (phone.isEmpty()) {
-            text_phone.error = "Please enter the phone number"
-            text_phone.requestFocus()
-            return
-        }
-        if (email.isEmpty()) {
-            text_email.error = "Please enter the email address"
-            text_email.requestFocus()
-            return
-        }
-        if (id_number.isEmpty()) {
-            text_idcard.error = "Please enter the National ID Number"
-            text_idcard.requestFocus()
-            return
-        }
-        if (constituency.isEmpty()) {
-            text_constituency.error = "Please enter the the constituency"
-            text_constituency.requestFocus()
-            return
-        }
-        if (ward.isEmpty()) {
-            text_ward.error = "Please enter the ward"
-            text_ward.requestFocus()
-            return
-        }
-        if (landmark.isEmpty()) {
-            text_location.error = "Please enter the nearest landmark"
-            text_location.requestFocus()
-            return
-        }
-        if (farmSize.isEmpty()) {
-            text_farm_size.error = "Please enter the farm size"
-            text_farm_size.requestFocus()
-            return
-        }
-
-        insertDetails()
-        locationDetails()
-        insertFarmDetails()
-    }
-
     // insert personal , location and farm details to firestore
     private fun insertDetails() {
 
@@ -338,8 +343,8 @@ class HarvestRequsetFragment : Fragment() {
             phone,
             email,
             id_number,
-            time_request_sent,
-            status_of_request
+            Timestamp.now(),
+            false
 
         )
         mDatabase.collection("UserDetails").document(userId).set(userdetails)

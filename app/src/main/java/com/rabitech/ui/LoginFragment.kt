@@ -1,5 +1,7 @@
 package com.rabitech.ui
 
+import android.app.AlertDialog
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -11,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.rabitech.R
+import com.rabitech.dataModels.CustomLoading
 import com.rabitech.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -22,17 +25,17 @@ class LoginFragment : Fragment() {
     private lateinit var mAuth: FirebaseAuth
     private lateinit var binding: FragmentLoginBinding
 
+    val progressBar = CustomLoading()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
-
         binding = DataBindingUtil.inflate(
             inflater, R.layout.fragment_login, container, false
         )
         mAuth = FirebaseAuth.getInstance()
-
 
         binding.btnLogin.setOnClickListener {
             login()
@@ -56,6 +59,7 @@ class LoginFragment : Fragment() {
 
 
     private fun login() {
+
         val userEmail = text_email_login.text.toString()
         val userPass = text_input_pass.text.toString()
 
@@ -76,12 +80,14 @@ class LoginFragment : Fragment() {
         }
 
 
-        binding.progressBar.visibility = View.VISIBLE
+        progressBar.show(this.context!!,"Please wait...")
+//        binding.progressBar.visibility = View.VISIBLE
         mAuth.signInWithEmailAndPassword(userEmail, userPass).addOnCompleteListener {
             if (it.isSuccessful) {
-                binding.progressBar.visibility = View.GONE
+
                 Toast.makeText(activity, "login successful", Toast.LENGTH_LONG).show()
                 findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
+                progressBar.loadingDialog.dismiss()
             }
 
         }.addOnFailureListener {

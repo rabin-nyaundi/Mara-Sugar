@@ -9,19 +9,19 @@
         tools:context=".ui.ProfileFragment">
 
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolBar_profile"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:fontFamily="@font/roboto"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:title="Profile"
-            app:titleTextColor="@color/colorWhite" />
+<!--        <androidx.appcompat.widget.Toolbar-->
+<!--            android:id="@+id/toolBar_profile"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="?attr/colorPrimary"-->
+<!--            android:fontFamily="@font/roboto"-->
+<!--            android:minHeight="?attr/actionBarSize"-->
+<!--            android:theme="?attr/actionBarTheme"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:title="Profile"-->
+<!--            app:titleTextColor="@color/icons" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -29,7 +29,10 @@
             android:gravity="center"
             android:orientation="vertical"
             android:padding="20dp"
-            app:layout_constraintTop_toBottomOf="@id/toolBar_profile">
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
             <TextView
                 android:id="@+id/text_header"
@@ -41,10 +44,7 @@
                 android:padding="10dp"
                 android:text="Personal Profile"
                 android:textSize="25sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/toolBar_profile" />
+                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/input_layout_fname_profile"
@@ -146,17 +146,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:orientation="horizontal"
-                android:padding="20dp"
-                android:layout_gravity="center">
+                android:padding="20dp">
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/edit_profile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:text="Edit"
-                    android:layout_gravity="center"
                     app:icon="@drawable/ic_edit_white" />
 
                 <com.google.android.material.button.MaterialButton

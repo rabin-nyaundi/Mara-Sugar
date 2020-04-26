@@ -1,19 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorSecondaryDark">#49a7cc</color>
-    <color name="colorPrimaryDark">#3700B3</color>
-    <color name="colorAccent">#03DAC5</color>
-    <color name="colorSecondary">#fafafa</color>
-    <color name="colorWhite">#FFFFFF</color>
-    <color name="colorPrimary">#836fa9</color>
+<!--    <color name="colorSecondaryDark">#49a7cc</color>-->
+<!--    <color name="colorPrimaryDark">#3700B3</color>-->
+<!--    <color name="colorAccent">#03DAC5</color>-->
+<!--    <color name="colorSecondary">#fafafa</color>-->
+<!--    <color name="colorWhite">#FFFFFF</color>-->
+<!--    <color name="colorPrimary">#836fa9</color>-->
 
     <color name="colorOrange">#ff6d00</color>
 <!--colors -->
-    <color name="primaryColor">#80d8ff</color>
-    <color name="primaryLightColor">#b5ffff</color>
-    <color name="primaryDarkColor">#90caf9</color>
-    <color name="secondaryColor">#b39ddb</color>
-    <color name="secondaryLightColor">#e6ceff</color>
-    <color name="primaryTextColor">#000000</color>
-    <color name="secondaryTextColor">#000000</color>
+<!--    <color name="primaryColor">#80d8ff</color>-->
+<!--    <color name="primaryLightColor">#b5ffff</color>-->
+<!--    <color name="primaryDarkColor">#90caf9</color>-->
+<!--    <color name="secondaryColor">#b39ddb</color>-->
+<!--    <color name="secondaryLightColor">#e6ceff</color>-->
+<!--    <color name="primaryTextColor">#000000</color>-->
+<!--    <color name="secondaryTextColor">#000000</color>-->
+
+<!--    icons home colors-->
+    <color name="light_green">#4CAF50</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="load_text">#E91E63</color>
+
+<!--    end-->
+    <color name="primary">#4CAF50</color>
+    <color name="primary_dark">#388E3C</color>
+    <color name="primary_light">#C8E6C9</color>
+    <color name="accent">#4CAF50</color>
+    <color name="primary_text">#212121</color>
+    <color name="secondary_text">#757575</color>
+    <color name="icons">#FFFFFF</color>
+    <color name="divider">#BDBDBD</color>
 </resources>

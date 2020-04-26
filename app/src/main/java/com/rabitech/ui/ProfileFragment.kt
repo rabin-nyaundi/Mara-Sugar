@@ -14,7 +14,6 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.rabitech.R
 import com.rabitech.databinding.FragmentProfileBinding
-import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
  * A simple [Fragment] subclass.
@@ -41,6 +40,7 @@ class ProfileFragment : Fragment() {
         // Inflate the layout for this fragment
 //        return inflater.inflate(R.layout.fragment_profile, container, false)
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_profile, container, false)
+
 
         mDatabase = FirebaseFirestore.getInstance()
         mAuth = FirebaseAuth.getInstance()

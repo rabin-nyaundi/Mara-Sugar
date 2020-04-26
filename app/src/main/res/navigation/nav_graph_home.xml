@@ -8,14 +8,18 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.rabitech.ui.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="Home"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment"
             app:destination="@id/notificationsFragment" />
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profileFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/homeFragment" />
         <action
             android:id="@+id/action_homeFragment_to_harvestRequsetFragment"
@@ -23,21 +27,29 @@
         <action
             android:id="@+id/action_homeFragment_to_notificationsFragment2"
             app:destination="@id/notificationsFragment"
-            app:popUpTo="@id/nav_graph_home" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment" />
         <action
             android:id="@+id/action_homeFragment_to_harvestRequsetFragment2"
             app:destination="@id/harvestRequsetFragment"
-            app:popUpTo="@id/nav_graph_home" />
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right"
+            app:popUpTo="@id/homeFragment" />
         <action
             android:id="@+id/action_homeFragment_to_mainActivity"
             app:destination="@id/mainActivity"
-            app:popUpTo="@id/homeFragment"
+            app:popUpTo="@id/nav_graph_home"
             app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/harvestRequsetFragment"
         android:name="com.rabitech.ui.HarvestRequsetFragment"
-        android:label="HarvestRequsetFragment"
+        android:label="Harvest Requset"
         tools:layout="@layout/fragment_harvest_requset">
         <action
             android:id="@+id/action_harvestRequsetFragment_to_homeFragment"
@@ -46,12 +58,12 @@
     <fragment
         android:id="@+id/notificationsFragment"
         android:name="com.rabitech.ui.NotificationsFragment"
-        android:label="fragment_notifications"
-        tools:layout="@layout/fragment_notifications"/>
+        android:label="Notifications"
+        tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.rabitech.ui.ProfileFragment"
-        android:label="fragment_profile"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" />
     <activity
         android:id="@+id/mainActivity"

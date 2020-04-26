@@ -12,35 +12,37 @@
             android:layout_height="match_parent"
             tools:context=".ui.HarvestRequsetFragment">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:background="?attr/colorAccent"
-                app:title="Harvest Request"
-                app:titleTextColor="@color/secondaryTextColor"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+<!--            <androidx.appcompat.widget.Toolbar-->
+<!--                android:id="@+id/toolbar_harvest"-->
+<!--                android:layout_width="0dp"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_marginBottom="8dp"-->
+<!--                android:background="@color/primary"-->
+<!--                android:minHeight="?attr/actionBarSize"-->
+<!--                android:theme="?attr/actionBarTheme"-->
+<!--                app:layout_constraintBottom_toTopOf="@+id/text_personal_details"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                app:title="Harvest Request"-->
+<!--                app:titleTextColor="@color/icons" />-->
 
             <TextView
                 android:id="@+id/text_personal_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
                 android:fontFamily="@font/roboto"
                 android:text="Personal Details"
                 android:textSize="20sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/textInputLayout_fname"
                 app:layout_constraintEnd_toStartOf="@+id/btn_edit"
                 app:layout_constraintHorizontal_bias="0.113"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/toolbar"
+                app:layout_constraintTop_toBottomOf="parent"
                 app:layout_constraintVertical_bias="0.019" />
 
             <com.google.android.material.textfield.TextInputLayout
@@ -54,9 +56,10 @@
                 app:errorEnabled="true"
                 app:hintAnimationEnabled="true"
                 app:hintTextAppearance="@style/textHint"
+                app:layout_constraintBottom_toTopOf="@+id/textInputLayout_lname"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_edit">
+                app:layout_constraintTop_toBottomOf="@+id/text_personal_details">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/text_fname"
@@ -76,6 +79,7 @@
                 app:errorEnabled="true"
                 app:hintAnimationEnabled="true"
                 app:hintTextAppearance="@style/textHint"
+                app:layout_constraintBottom_toTopOf="@+id/textInput_layout_phone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textInputLayout_fname">
@@ -272,7 +276,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 app:errorEnabled="true"
                 app:errorTextAppearance="@style/textHint"
@@ -306,8 +310,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:text="Submit Request"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -319,8 +324,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
+                android:layout_marginBottom="16dp"
                 android:text="Edit"
                 app:icon="@drawable/ic_edit_white"
+                app:layout_constraintBottom_toTopOf="@id/textInputLayout_fname"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/text_personal_details" />
         </androidx.constraintlayout.widget.ConstraintLayout>
