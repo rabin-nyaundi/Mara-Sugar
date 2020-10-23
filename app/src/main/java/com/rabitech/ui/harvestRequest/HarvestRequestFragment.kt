@@ -12,10 +12,14 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.google.android.gms.tasks.Continuation
+import com.google.android.gms.tasks.Task
+import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
+import com.google.firebase.storage.UploadTask
 import com.rabitech.R
 import com.rabitech.dataModels.CustomLoading
 import com.rabitech.dataModels.FarmDetails
@@ -59,24 +63,41 @@ class HarvestRequestFragment : Fragment() {
 
         //retrieveLocation()
 
-        binding.submitRequest.setOnClickListener {
+        setClickListeners()
 
+        return binding.root
+    }
+
+    private fun setClickListeners() {
+        binding.submitRequest.setOnClickListener {
             if (validateUserInput()) {
                 uploadImage()
             }
-            /*validateUserInput()
-            uploadImage()*/
-
         }
         binding.imageFarmBtn.setOnClickListener {
             showSelectedPictureDialog()
         }
 
-        binding.btnEdit.setOnClickListener {
-//            editField()
+        binding.textDatePlanted.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                displayDatePicker()
+            }
         }
 
-        return binding.root
+    }
+
+    private fun displayDatePicker() {
+        val dateBuilder = MaterialDatePicker.Builder.datePicker()
+        dateBuilder.setTitleText("Planting Date")
+
+        val materialDatePicker = dateBuilder.build()
+        materialDatePicker.show(requireActivity().supportFragmentManager, "DATE_PICKER")
+        materialDatePicker.addOnPositiveButtonClickListener { _ ->
+
+            viewModel.datePlanted = materialDatePicker.headerText
+            binding.textDatePlanted.setText(materialDatePicker.headerText)
+        }
+
     }
 
 
@@ -88,11 +109,11 @@ class HarvestRequestFragment : Fragment() {
         viewModel.landmark = binding.landmark.text.toString()
 
         viewModel.farmSize = binding.textFarmSize.text.toString()
-        viewModel.datePlanted = binding.inputPlantDate.toString()
+        viewModel.datePlanted = binding.textDatePlanted.text.toString()
 
         if (viewModel.constituency.isEmpty()) {
-            text_constituency.error = "Please enter the the constituency"
-            text_constituency.requestFocus()
+            binding.textConstituency.error = "Please enter the the constituency"
+            binding.textConstituency.requestFocus()
             isValid = false
         }
         if (viewModel.ward.isEmpty()) {
@@ -132,51 +153,29 @@ class HarvestRequestFragment : Fragment() {
         //sendRequest()
     }
 
-    /*private fun retrieveLocation() {
-        val userId = mAuth.currentUser!!.uid
-
-        val ref = mDatabase.collection("LocationDetails").document(userId)
-        ref.get().addOnSuccessListener { document ->
-
-            if (document != null) {
-
-                constituency = document.getString("constituency").toString()
-                ward = document.getString("ward").toString()
-                landmark = document.getString("location").toString()
-
-                binding.textConstituency.setText(constituency)
-                binding.textWard.setText(ward)
-                binding.landmark.setText(landmark)
-
-                Log.d(
-                    TAG,
-                    "@@@@@@@@@@@@@@@@@@@@@@@@@@data@@@@@@@@@@@@: ${document.data}"
-                )
-            }
-        }
-    }*/
-
 
     private fun uploadImage() {
+        progressBar.show(requireContext(), "Updating your details...")
+
         val uuid = UUID.randomUUID()
 
-        val reference = storageReference.child("LandImages/$uuid")
+        val reference = storageReference.child("LandImages/$uuid.jpg")
         val uploadTask = reference.putFile(selectedImageUri!!)
 
-        val urlTask = uploadTask.continueWith { task ->
+        val urlTask = uploadTask.continueWithTask { task ->
             if (!task.isSuccessful) {
-                task.exception?.let { exception ->
-                    throw exception
+                task.exception?.let {
+                    throw it
                 }
             }
             reference.downloadUrl
         }.addOnCompleteListener { task ->
             if (task.isSuccessful) {
-                val downloadUrl = task.result.toString()
-
-                sendRequest(downloadUrl)
+                val downloadUri = task.result
+                sendRequest(downloadUri)
             }
         }
+
 
     }
 
@@ -230,7 +229,7 @@ class HarvestRequestFragment : Fragment() {
     }
 
 
-    private fun sendRequest(imageUrl: String) {
+    private fun sendRequest(downloadUri: Uri?) {
         val userId = mAuth.currentUser!!.uid
 
         val locationDetails = LocationDetails(
@@ -247,23 +246,11 @@ class HarvestRequestFragment : Fragment() {
         val harvestRequest = HarvestRequest(
             locationDetails,
             farmDetails,
-            imageUrl,
+            downloadUri.toString().trim(),
             HarvestStatus.WAITING_APPROVAL.toString(),
             userId,
             ""
         )
-
-        /* val harvest = Harvest_data_model(
-             userId,
-             constituency,
-             ward,
-             landmark,
-             farmSize,
-             downloadUrl,
-             plantDate = Date()
-         )*/
-
-        progressBar.show(requireContext(), "Updating your details...")
 
         val harvestRequestReference = mDatabase.collection("harvestRequests").document()
         harvestRequest.requestId = harvestRequestReference.id
@@ -286,29 +273,5 @@ class HarvestRequestFragment : Fragment() {
             )
                 .show()
         }
-
-
-        /* mDatabase.collection("Harvest Request").document(userId).collection("harvest" + Date())
-             .add(harvest)
-             .addOnSuccessListener { document ->
-                 Toast.makeText(
-                     activity,
-                     "Request sent successfully",
-                     Toast.LENGTH_LONG
-                 )
-                     .show()
-
-                 progressBar.loadingDialog.dismiss()
-
-             }.addOnFailureListener { exception ->
-                 Toast.makeText(
-                     activity,
-                     "Request not sent. Check the details and send again.",
-                     Toast.LENGTH_LONG
-                 )
-                     .show()
-             }*/
-
-        mDatabase.collection("harvestRequests").document()
     }
 }
