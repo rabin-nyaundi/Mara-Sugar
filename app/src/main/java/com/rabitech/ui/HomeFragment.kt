@@ -35,9 +35,12 @@ class HomeFragment : Fragment() {
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_harvestRequsetFragment)
         )
 
-        binding.harvestRequest.setOnClickListener { view: View ->
-            view.findNavController().navigate(R.id.action_homeFragment_to_harvestRequsetFragment)
-        }
+//        binding.harvestRequest.setOnClickListener { view: View ->
+//            view.findNavController().navigate(R.id.action_homeFragment_to_harvestRequsetFragment)
+//        }
+        binding.bankAccount.setOnClickListener(
+            Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_bankAccountFragment)
+        )
 
         binding.notifications.setOnClickListener(
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_notificationsFragment)
