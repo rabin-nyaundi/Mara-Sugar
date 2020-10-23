@@ -19,7 +19,7 @@
                 android:theme="?attr/actionBarTheme"
                 app:menu="@menu/sign_out_menu"
                 app:titleTextColor="@color/icons"
-                app:layout_constraintBottom_toTopOf="@+id/text_personal_details"
+                app:layout_constraintBottom_toTopOf="@+id/myNavHostHome"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>

@@ -15,19 +15,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
 
-<!--            <androidx.appcompat.widget.Toolbar-->
-<!--                android:id="@+id/toolbar_home"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="?attr/colorAccent"-->
-<!--                app:title="Home"-->
-<!--                app:titleTextColor="@color/icons"-->
-<!--                android:font ="@font/roboto"-->
-<!--                app:menu="@menu/sign_out_menu"-->
-<!--                android:minHeight="?attr/actionBarSize"-->
-<!--                android:theme="?attr/actionBarTheme"-->
-<!--                android:layout_marginBottom="50dp"/>-->
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,7 +23,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/harvest_request"
+                    android:id="@+id/profile"
                     android:layout_width="160dp"
                     app:cardCornerRadius="8dp"
                     app:cardBackgroundColor="@color/primary_light"
@@ -52,19 +39,20 @@
                         <ImageView
                             android:layout_width="72dp"
                             android:layout_height="72dp"
-                            android:background="@drawable/circle_background_blue"
+                            android:background="@drawable/circle_background_green"
                             android:padding="10dp"
-                            android:src="@drawable/ic_send_black" />
+                            android:src="@drawable/ic_account_circle" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Harvest Request"
+                            android:text="Update Profile"
                             android:textSize="20sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
 
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/bank_account"
@@ -138,7 +126,7 @@
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/profile"
+                    android:id="@+id/harvest_request"
                     android:layout_width="160dp"
                     app:cardCornerRadius="8dp"
                     app:cardBackgroundColor="@color/primary_light"
@@ -154,19 +142,21 @@
                         <ImageView
                             android:layout_width="72dp"
                             android:layout_height="72dp"
-                            android:background="@drawable/circle_background_green"
+                            android:background="@drawable/circle_background_blue"
                             android:padding="10dp"
-                            android:src="@drawable/ic_account_circle" />
+                            android:src="@drawable/ic_send_black" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Profile"
+                            android:text="Harvest Request"
                             android:textSize="20sp"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
+
+
             </LinearLayout>
 
 

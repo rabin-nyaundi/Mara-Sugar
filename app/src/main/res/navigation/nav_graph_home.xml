@@ -45,10 +45,13 @@
             app:destination="@id/mainActivity"
             app:popUpTo="@id/nav_graph_home"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_homeFragment_to_bankAccountFragment"
+            app:destination="@id/bankAccountFragment" />
     </fragment>
     <fragment
         android:id="@+id/harvestRequsetFragment"
-        android:name="com.rabitech.ui.HarvestRequsetFragment"
+        android:name="com.rabitech.ui.HarvestRequestFragment"
         android:label="Harvest Requset"
         tools:layout="@layout/fragment_harvest_requset">
         <action
@@ -69,4 +72,9 @@
         android:id="@+id/mainActivity"
         android:name="com.rabitech.uiHost.MainActivity"
         android:label="MainActivity" />
+    <fragment
+        android:id="@+id/bankAccountFragment"
+        android:name="com.rabitech.ui.BankAccountFragment"
+        android:label="fragment_bank__account_"
+        tools:layout="@layout/fragment_bank__account_" />
 </navigation>
