@@ -19,16 +19,14 @@ import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.rabitech.R
 import com.rabitech.dataModels.CustomLoading
-import com.rabitech.dataModels.FarmDetails
-import com.rabitech.dataModels.LocationDetails
+import com.rabitech.dataModels.Harvest_data_model
 import com.rabitech.databinding.FragmentHarvestRequsetBinding
 import kotlinx.android.synthetic.main.fragment_harvest_requset.*
-import kotlinx.android.synthetic.main.fragment_harvest_requset.view.*
 import java.io.IOException
 import java.util.*
 
 
-class HarvestRequsetFragment : Fragment() {
+class HarvestRequestFragment : Fragment() {
 
     private lateinit var binding: FragmentHarvestRequsetBinding
     private lateinit var mDatabase: FirebaseFirestore
@@ -39,12 +37,11 @@ class HarvestRequsetFragment : Fragment() {
     private var selectedImageUri: Uri? = null
 
 
-    //location details
+
     private var constituency = ""
     private var ward = ""
     private var landmark = ""
 
-    //farm details
     private var farmSize = ""
     private var downloadUrl = ""
     private var date = ""
@@ -83,6 +80,40 @@ class HarvestRequsetFragment : Fragment() {
         return binding.root
     }
 
+
+    private fun validateUserInput() {
+        //location details
+        constituency = binding.textConstituency.text.toString()
+        ward = binding.textWard.text.toString()
+        landmark = binding.landmark.text.toString()
+
+        farmSize = binding.textFarmSize.text.toString()
+        date = binding.inputPlantDate.toString()
+
+        if (constituency.isEmpty()) {
+            text_constituency.error = "Please enter the the constituency"
+            text_constituency.requestFocus()
+            return
+        }
+        if (ward.isEmpty()) {
+            text_ward.error = "Please enter the ward"
+            text_ward.requestFocus()
+            return
+        }
+        if (landmark.isEmpty()) {
+            text_location.error = "Please enter the nearest landmark"
+            text_location.requestFocus()
+            return
+        }
+        if (farmSize.isEmpty()) {
+            text_farm_size.error = "Please enter the farm size"
+            text_farm_size.requestFocus()
+            return
+        }
+
+        sendRequest()
+    }
+
     private fun retrieveLocation() {
         val userId = mAuth.currentUser!!.uid
 
@@ -106,44 +137,6 @@ class HarvestRequsetFragment : Fragment() {
             }
         }
     }
-
-    //Validate user inputs
-    private fun validateUserInput() {
-        //location details
-        constituency = binding.textConstituency.text.toString()
-        ward = binding.textWard.text.toString()
-        landmark = binding.landmark.text.toString()
-
-        //farm details
-        farmSize = binding.textFarmSize.text.toString()
-        date = binding.inputPlantDate.text_date_planted.toString()
-
-
-        if (constituency.isEmpty()) {
-            text_constituency.error = "Please enter the the constituency"
-            text_constituency.requestFocus()
-            return
-        }
-        if (ward.isEmpty()) {
-            text_ward.error = "Please enter the ward"
-            text_ward.requestFocus()
-            return
-        }
-        if (landmark.isEmpty()) {
-            text_location.error = "Please enter the nearest landmark"
-            text_location.requestFocus()
-            return
-        }
-        if (farmSize.isEmpty()) {
-            text_farm_size.error = "Please enter the farm size"
-            text_farm_size.requestFocus()
-            return
-        }
-
-        locationDetails()
-        insertFarmDetails()
-    }
-
 
 
     private fun uploadImage() {
@@ -217,56 +210,64 @@ class HarvestRequsetFragment : Fragment() {
 
     private fun captureImage() {
 
+//        capture image using camera intent
     }
 
-    private fun locationDetails() {
+    private fun sendRequest() {
 
         val userId = mAuth.currentUser!!.uid
 
-        val locationDetails = LocationDetails(
+        val harvest = Harvest_data_model(
+            userId,
             constituency,
             ward,
-            landmark
-
+            landmark,
+            farmSize,
+            downloadUrl,
+            plantDate = Date()
         )
 
-        mDatabase.collection("LocationDetails").document(userId).set(locationDetails)
+        progressBar.show(this.context!!, "Updating your details...")
+
+        mDatabase.collection("Harvest Request").document(userId).collection("harvest"+ Date()).add(harvest)
             .addOnSuccessListener { document ->
                 Toast.makeText(
                         activity,
-                        "Location details inserted successfully",
+                        "Request sent successfully",
                         Toast.LENGTH_LONG
                     )
                     .show()
 
-            }.addOnFailureListener { exception ->
-                Toast.makeText(activity, "Failed to insert location details", Toast.LENGTH_LONG)
-                    .show()
-            }
-    }
-
-    private fun insertFarmDetails() {
-
-        val farmDetails = FarmDetails(
-            farmSize,
-            downloadUrl,
-            plantDate = Date()
-
-        )
-
-        progressBar.show(this.context!!, "Updating your details...")
-        mDatabase.collection("FarmDetails").document().set(farmDetails)
-            .addOnSuccessListener { document ->
-
-                Toast.makeText(activity, "Farm details inserted successfully", Toast.LENGTH_LONG)
-                    .show()
                 progressBar.loadingDialog.dismiss()
 
             }.addOnFailureListener { exception ->
-
-                Toast.makeText(activity, "Failed to insert farm details", Toast.LENGTH_LONG).show()
-
+                Toast.makeText(activity, "Request not sent. Check the details and send again.", Toast.LENGTH_LONG)
+                    .show()
             }
     }
+
+//    private fun insertFarmDetails() {
+//
+//        val farmDetails = Harvest_data_model(
+//            farmSize,
+//            downloadUrl,
+//            plantDate = Date()
+//
+//        )
+//
+//        progressBar.show(this.context!!, "Updating your details...")
+//        mDatabase.collection("Harvest_data_model").document().set(farmDetails)
+//            .addOnSuccessListener { document ->
+//
+//                Toast.makeText(activity, "Farm details inserted successfully", Toast.LENGTH_LONG)
+//                    .show()
+//                progressBar.loadingDialog.dismiss()
+//
+//            }.addOnFailureListener { exception ->
+//
+//                Toast.makeText(activity, "Failed to insert farm details", Toast.LENGTH_LONG).show()
+//
+//            }
+//    }
 
 }

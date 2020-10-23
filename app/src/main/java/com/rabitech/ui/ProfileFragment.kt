@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -144,6 +145,9 @@ class ProfileFragment : Fragment() {
         ref.get()
             .addOnSuccessListener { documentSnapshot ->
                 if (documentSnapshot.exists()){
+                    if(ref == null){
+                        findNavController().navigate(R.id.action_homeFragment_to_harvestRequsetFragment)
+                    }
                     firstname = documentSnapshot.getString("user_fname").toString()
                     lastname = documentSnapshot.getString("user_lname").toString()
                     phone = documentSnapshot.getString("user_phone").toString()

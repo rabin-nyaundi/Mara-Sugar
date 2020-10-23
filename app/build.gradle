@@ -51,7 +51,7 @@ dependencies {
 
     //firebase auth
     implementation 'com.google.firebase:firebase-auth:19.2.0'
-    
+
     //firestore
     implementation "com.google.firebase:firebase-firestore-ktx:21.4.1"
 
