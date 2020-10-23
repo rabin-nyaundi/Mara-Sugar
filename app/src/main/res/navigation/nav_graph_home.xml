@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/harvestRequsetFragment"
-        android:name="com.rabitech.ui.HarvestRequestFragment"
+        android:name="com.rabitech.ui.harvestRequest.HarvestRequestFragment"
         android:label="Harvest Requset"
         tools:layout="@layout/fragment_harvest_requset">
         <action
