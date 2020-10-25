@@ -42,7 +42,7 @@ class HomeFragment : Fragment() {
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_bankAccountFragment)
         )
 
-        binding.notifications.setOnClickListener(
+        binding.harvestHistory.setOnClickListener(
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_notificationsFragment)
         )
 

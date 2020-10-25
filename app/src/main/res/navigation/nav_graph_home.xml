@@ -65,16 +65,24 @@
         tools:layout="@layout/fragment_notifications" />
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.rabitech.ui.ProfileFragment"
+        android:name="com.rabitech.ui.profile.ProfileFragment"
         android:label="Profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
     <activity
         android:id="@+id/mainActivity"
         android:name="com.rabitech.uiHost.MainActivity"
         android:label="MainActivity" />
     <fragment
         android:id="@+id/bankAccountFragment"
-        android:name="com.rabitech.ui.BankAccountFragment"
-        android:label="fragment_bank__account_"
-        tools:layout="@layout/fragment_bank__account_" />
+        android:name="com.rabitech.ui.bankAccount.BankAccountFragment"
+        android:label="Bank Account"
+        tools:layout="@layout/fragment_bank__account_">
+        <action
+            android:id="@+id/action_bankAccountFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

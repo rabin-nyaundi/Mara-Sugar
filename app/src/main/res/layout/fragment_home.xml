@@ -95,7 +95,7 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/notifications"
+                    android:id="@+id/harvest_history"
                     android:layout_width="160dp"
                     app:cardCornerRadius="8dp"
                     app:cardBackgroundColor="@color/primary_light"
@@ -113,13 +113,13 @@
                             android:layout_height="72dp"
                             android:background="@drawable/circle_back_cyan"
                             android:padding="10dp"
-                            android:src="@drawable/ic_notifications" />
+                            android:src="@drawable/ic_baseline_history" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Notifications"
+                            android:text="Harvest History"
                             android:textSize="20sp"
                             android:textStyle="bold" />
                     </LinearLayout>

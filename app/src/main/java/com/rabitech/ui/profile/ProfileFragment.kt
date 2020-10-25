@@ -1,4 +1,4 @@
-package com.rabitech.ui
+package com.rabitech.ui.profile
 
 import android.os.Bundle
 import android.text.method.KeyListener
@@ -9,16 +9,18 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.google.firebase.Timestamp
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import com.rabitech.R
 import com.rabitech.dataModels.CustomLoading
-import com.rabitech.dataModels.UserDetails
+import com.rabitech.dataModels.ProfileUser
 import com.rabitech.databinding.FragmentProfileBinding
+import com.rabitech.ui.harvestRequest.HarvestRequestViewModel
 import kotlinx.android.synthetic.main.fragment_profile.*
 
 /**
@@ -26,19 +28,22 @@ import kotlinx.android.synthetic.main.fragment_profile.*
  */
 class ProfileFragment : Fragment() {
 
+
+    private val viewModel: ProfileViewModel by viewModels()
+
     private lateinit var binding: FragmentProfileBinding
     private lateinit var storageReference: StorageReference
     private lateinit var mDatabase: FirebaseFirestore
-    private lateinit var mAuth:FirebaseAuth
+    private lateinit var mAuth: FirebaseAuth
 
-    private lateinit var listener:KeyListener
+    private lateinit var listener: KeyListener
     val progressBar = CustomLoading()
 
-    private var firstname = ""
-    private var lastname = ""
-    private var phone = ""
-    private var email = ""
-    private var id_number = ""
+//    private var firstname = ""
+//    private var lastname = ""
+//    private var phone = ""
+//    private var email = ""
+//    private var id_number = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -56,72 +61,97 @@ class ProfileFragment : Fragment() {
         binding.editProfile.setOnClickListener {
             enableEdit()
         }
-        binding.saveProfile.setOnClickListener {
-            validateInput()
-            insertProfile()
-        }
+
+        setOnClickListeners()
 
         return binding.root
     }
 
-    private fun validateInput() {
-        firstname = binding.textViewFname.text.toString()
-        lastname = binding.textViewLname.text.toString()
-        phone = binding.textViewPhone.text.toString()
-        email = binding.textViewEmail.text.toString()
-        id_number = binding.textViewIdNumber.text.toString()
-//        time_request_sent = Timestamp.now()
+    private fun setOnClickListeners() {
+        binding.saveProfile.setOnClickListener {
+            if (validateInput()) {
+                insertProfile()
+            } else {
+                val snack =
+                    Snackbar.make(binding.saveProfile, "An error occured", Snackbar.LENGTH_LONG)
+                snack.show()
+            }
+        }
+    }
+
+    private fun validateInput(): Boolean {
+        var isValid = false
+
+        viewModel.firstName = binding.textViewFname.text.toString()
+        viewModel.lastName = binding.textViewLname.text.toString()
+        viewModel.phone = binding.textViewPhone.text.toString()
+        viewModel.email = binding.textViewEmail.text.toString()
+        viewModel.nationalId = binding.textViewIdNumber.text.toString()
 
 
-//        validate input from text fields
+//        Validate input from text fields
 
-        if (firstname.isEmpty()) {
+        if (viewModel.firstName.isEmpty()) {
             textView_fname.error = "Please enter the first name"
             textView_fname.requestFocus()
-            return
+            isValid = false
         }
-        if (lastname.isEmpty()) {
+        if (viewModel.lastName.isEmpty()) {
             textView_lname.error = "Please enter the last name"
             textView_lname.requestFocus()
-            return
+            isValid = false
         }
-        if (phone.isEmpty()) {
+        if (viewModel.phone.isEmpty()) {
             textView_phone.error = "Please enter the phone number"
             textView_phone.requestFocus()
-            return
+            isValid = false
         }
-        if (email.isEmpty()) {
+        if (viewModel.email.isEmpty()) {
             textView_email.error = "Please enter the email address"
             textView_email.requestFocus()
-            return
+            isValid = false
         }
-        if (id_number.isEmpty()) {
+        if (viewModel.nationalId.isEmpty()) {
             textView_id_number.error = "Please enter the National ID Number"
             textView_id_number.requestFocus()
-            return
+            isValid = false
         }
+        if (viewModel.nationalId.length < 7) {
+            textView_id_number.error = "The National ID should be 8 Characters Long"
+            textView_id_number.requestFocus()
+            isValid = false
+        }
+        if (viewModel.firstName.isNotEmpty() && viewModel.lastName.isNotEmpty() && viewModel.phone.isNotEmpty() && viewModel.email.isNotEmpty()
+            && viewModel.nationalId.isNotEmpty()
+        ) {
+            isValid = true
+        }
+
+        return isValid
     }
 
     private fun insertProfile() {
 
         val userId = mAuth.currentUser!!.uid
 
-        val userdetails = UserDetails(
-            firstname,
-            lastname,
-            phone,
-            email,
-            id_number,
-            Timestamp.now(),
-            false
+        val userDetails = ProfileUser(
+            viewModel.firstName,
+            viewModel.lastName,
+            viewModel.phone,
+            viewModel.email,
+            viewModel.nationalId,
+            userId,
 
-        )
-        progressBar.show(this.context!!, "Please wait...")
-        mDatabase.collection("UserDetails").document(userId).set(userdetails)
+
+            )
+        progressBar.show(this.requireContext(), "Please wait...")
+        mDatabase.collection("profileUser").document(userId).set(userDetails)
             .addOnSuccessListener { document ->
 
                 Log.d("@@@@insertion@@@@", "details added Successfully ${document}")
                 progressBar.loadingDialog.dismiss()
+                val snack =Snackbar.make(binding.textViewIdNumber,"Profile Successfully Updated",Snackbar.LENGTH_LONG)
+                snack.show()
                 Toast.makeText(
                     activity,
                     "Personal details inserted successfully",
@@ -141,29 +171,33 @@ class ProfileFragment : Fragment() {
         val user_email = mAuth.currentUser!!.email
 
 
-        val ref = mDatabase.collection("UserDetails").document(userId)
+        val ref = mDatabase.collection("profileUser").document(userId)
         ref.get()
             .addOnSuccessListener { documentSnapshot ->
-                if (documentSnapshot.exists()){
-                    if(ref == null){
+                if (documentSnapshot.exists()) {
+                    if (ref == null) {
                         findNavController().navigate(R.id.action_homeFragment_to_harvestRequsetFragment)
                     }
-                    firstname = documentSnapshot.getString("user_fname").toString()
-                    lastname = documentSnapshot.getString("user_lname").toString()
-                    phone = documentSnapshot.getString("user_phone").toString()
-                    email = user_email.toString()
-                    id_number = documentSnapshot.getString("user_National_id").toString()
+                    viewModel.firstName = documentSnapshot.getString("firstName").toString()
+                    viewModel.lastName = documentSnapshot.getString("lastName").toString()
+                    viewModel.phone = documentSnapshot.getString("phone").toString()
+                    viewModel.email = user_email.toString()
+                    viewModel.nationalId = documentSnapshot.getString("nationalId").toString()
 
-                    binding.textViewFname.setText(firstname)
-                    binding.textViewLname.setText(lastname)
-                    binding.textViewPhone.setText(phone)
-                    binding.textViewEmail.setText(email)
-                    binding.textViewIdNumber.setText(id_number)
+                    binding.textViewFname.setText(viewModel.firstName)
+                    binding.textViewLname.setText(viewModel.lastName)
+                    binding.textViewPhone.setText(viewModel.phone)
+                    binding.textViewEmail.setText(viewModel.email)
+                    binding.textViewIdNumber.setText(viewModel.nationalId)
 
                     disableField()
                 }
             }.addOnFailureListener { exception ->
-                Toast.makeText(activity,"Failed to fetch data from the database" +exception, Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    activity,
+                    "Failed to fetch data from the database" + exception,
+                    Toast.LENGTH_LONG
+                ).show()
             }
     }
 

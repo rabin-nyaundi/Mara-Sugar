@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.rabitech.R
 import com.rabitech.dataModels.CustomLoading
@@ -80,7 +81,7 @@ class LoginFragment : Fragment() {
         }
 
 
-        progressBar.show(this.context!!,"Please wait...")
+        progressBar.show(this.requireContext(),"Please wait...")
 //        binding.progressBar.visibility = View.VISIBLE
         mAuth.signInWithEmailAndPassword(userEmail, userPass).addOnCompleteListener {
             if (it.isSuccessful) {
@@ -91,7 +92,10 @@ class LoginFragment : Fragment() {
             }
 
         }.addOnFailureListener {
-            Toast.makeText(activity, "Login failed ." + it.message, Toast.LENGTH_LONG).show()
+            progressBar.loadingDialog.dismiss()
+            val snack = Snackbar.make(binding.btnSigupLogin,"Wrong Username or Password", Snackbar.LENGTH_LONG)
+            snack.show()
+            Toast.makeText(activity, "Login failed No records matching the user details entered .", Toast.LENGTH_LONG).show()
         }
     }
 

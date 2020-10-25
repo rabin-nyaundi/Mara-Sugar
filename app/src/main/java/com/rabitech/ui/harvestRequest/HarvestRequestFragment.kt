@@ -1,6 +1,7 @@
 package com.rabitech.ui.harvestRequest
 
 import android.app.AlertDialog
+import android.app.ProgressDialog.show
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,9 +13,11 @@ import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.tasks.Continuation
 import com.google.android.gms.tasks.Task
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -60,8 +63,6 @@ class HarvestRequestFragment : Fragment() {
         mDatabase = FirebaseFirestore.getInstance()
         mAuth = FirebaseAuth.getInstance()
         storageReference = FirebaseStorage.getInstance().reference
-
-        //retrieveLocation()
 
         setClickListeners()
 
@@ -262,6 +263,10 @@ class HarvestRequestFragment : Fragment() {
                 Toast.LENGTH_LONG
             )
                 .show()
+            val snack = Snackbar.make(binding.btnEdit,"Harvest request successfully sent", Snackbar.LENGTH_LONG)
+            snack.show()
+
+            findNavController().navigate(R.id.action_harvestRequsetFragment_to_homeFragment)
 
             progressBar.loadingDialog.dismiss()
 
