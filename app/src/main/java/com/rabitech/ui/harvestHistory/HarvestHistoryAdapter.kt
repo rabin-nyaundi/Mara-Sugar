@@ -15,6 +15,8 @@ class HarvestHistoryAdapter :
         HarvestHistoryDiffUtil()
     ) {
 
+    private var isExpanded = false
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): HarvestHistoryViewHolder {
         return from(parent)
     }
@@ -23,7 +25,14 @@ class HarvestHistoryAdapter :
         val harvestRequest = getItem(position)
         holder.bind(harvestRequest)
         holder.binding.imageExpandDetails.setOnClickListener {
-            holder.binding.cardViewHarvestDetails.visibility = View.VISIBLE
+            if(isExpanded){
+                holder.binding.cardViewHarvestDetails.visibility = View.GONE
+                isExpanded = false
+            }else{
+                holder.binding.cardViewHarvestDetails.visibility = View.VISIBLE
+                isExpanded = true
+            }
+
         }
     }
 
