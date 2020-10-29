@@ -1,0 +1,424 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="harvestRequest"
+            type="com.rabitech.dataModels.HarvestRequest" />
+
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_day_requested"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toStartOf="@+id/divider"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="20" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_month_requested"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Body1"
+            app:layout_constraintEnd_toEndOf="@+id/text_day_requested"
+            app:layout_constraintStart_toStartOf="@+id/text_day_requested"
+            app:layout_constraintTop_toBottomOf="@+id/text_day_requested"
+            tools:text="NOV" />
+
+        <View
+            android:id="@+id/divider"
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintBottom_toBottomOf="@+id/text_month_requested"
+            app:layout_constraintStart_toEndOf="@+id/text_month_requested"
+            app:layout_constraintTop_toTopOf="@+id/text_day_requested" />
+
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_harvest_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toStartOf="@+id/image_expand_details"
+            app:layout_constraintStart_toEndOf="@+id/divider"
+            app:layout_constraintTop_toTopOf="@+id/divider"
+            tools:text="XNDSJDSLKDL:SD:LKSL:KD" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/text_harvest_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@+id/text_harvest_id"
+            app:layout_constraintStart_toStartOf="@+id/text_harvest_id"
+            app:layout_constraintTop_toBottomOf="@+id/text_harvest_id"
+            tools:text="Nyamache" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/image_expand_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_baseline_arrow_drop_down" />
+
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/card_view_harvest_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:visibility="gone"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_month_requested">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_harvest_details_constituency"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="4dp"
+                    app:layout_constraintEnd_toStartOf="@+id/layout_harvest_details_ward"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_harvest_details_constituency"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Constituency"
+                        android:padding="10dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_harvest_details_ward"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/layout_harvest_details_constituency"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_harvest_details_ward"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ward"
+                        android:padding="10dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_harvest_details_size"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/layout_harvest_details_date_planted"
+                    app:layout_constraintStart_toStartOf="@+id/layout_harvest_details_constituency"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_harvest_details_constituency">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_harvest_details_size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Size"
+                        android:padding="10dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/layout_harvest_details_date_planted"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    app:layout_constraintEnd_toEndOf="@+id/layout_harvest_details_ward"
+                    app:layout_constraintStart_toEndOf="@+id/layout_harvest_details_size"
+                    app:layout_constraintTop_toBottomOf="@+id/layout_harvest_details_constituency">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/text_harvest_details_date_planted"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Ward"
+                        android:padding="10dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </com.google.android.material.card.MaterialCardView>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
+
+
+    <!--    <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/card_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp">
+
+                    <LinearLayout
+                        android:id="@+id/harvest_history"
+                        android:layout_width="match_parent"
+                        android:paddingLeft="16dp"
+                        android:paddingRight="16dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginTop="12dp"
+                        >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Harvest Request ID"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp" />
+                        <view
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginTop="20dp"/>
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/const_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="visible">
+
+                            <LinearLayout
+                                android:id="@+id/request_id_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:orientation="horizontal"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent">
+
+                                <TextView
+                                    android:id="@+id/request_id"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Request ID :"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/request_id_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Request ID"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/request_id"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/request_date_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/request_id_layout"
+                                app:layout_constraintVertical_bias="0.015">
+
+                                <TextView
+                                    android:id="@+id/date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Date Requested:"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/date_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Request "
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/date"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/request_location_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/request_date_layout"
+                                app:layout_constraintVertical_bias="0.146">
+
+                                <TextView
+                                    android:id="@+id/location"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Location :"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/location_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Request ID"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/location"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/request_status_layout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginBottom="8dp"
+                                android:orientation="horizontal"
+                                android:paddingLeft="16dp"
+                                android:paddingRight="16dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/request_location_layout"
+                                app:layout_constraintVertical_bias="0.696">
+
+                                <TextView
+                                    android:id="@+id/status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Location :"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/status_value"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_marginTop="16dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:padding="10dp"
+                                    android:text="Request ID"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/status"
+                                    app:layout_constraintTop_toTopOf="parent" />
+                            </LinearLayout>
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>\
+
+                        <view
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="20dp"
+                            android:layout_marginEnd="20dp"
+                            android:layout_marginTop="20dp"/>
+                        <Button
+                            android:id="@+id/expand"
+                            android:layout_width="wrap_content"
+                            android:layout_height="50dp"
+                            android:text="View Request"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginStart="10dp"/>
+
+
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </ScrollView>-->

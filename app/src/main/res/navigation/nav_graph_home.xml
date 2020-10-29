@@ -60,8 +60,8 @@
     </fragment>
     <fragment
         android:id="@+id/notificationsFragment"
-        android:name="com.rabitech.ui.HarvestHistoryFragment"
-        android:label="Notifications"
+        android:name="com.rabitech.ui.harvestHistory.HarvestHistoryFragment"
+        android:label="Harvest History"
         tools:layout="@layout/fragment_harvest_history" />
     <fragment
         android:id="@+id/profileFragment"

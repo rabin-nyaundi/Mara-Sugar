@@ -9,20 +9,20 @@
         android:layout_height="match_parent"
         tools:context=".uiHost.HomeHostFragment">
 
-            <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@color/primary"
-                android:minHeight="?attr/actionBarSize"
-                android:theme="?attr/actionBarTheme"
-                app:menu="@menu/sign_out_menu"
-                app:titleTextColor="@color/icons"
-                app:layout_constraintBottom_toTopOf="@+id/myNavHostHome"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@color/primary"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="?attr/actionBarTheme"
+            app:layout_constraintBottom_toTopOf="@+id/myNavHostHome"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/sign_out_menu"
+            app:titleTextColor="@color/icons" />
 
         <fragment
             android:id="@+id/myNavHostHome"
@@ -35,7 +35,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar"
             app:navGraph="@navigation/nav_graph_home" />
-
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
