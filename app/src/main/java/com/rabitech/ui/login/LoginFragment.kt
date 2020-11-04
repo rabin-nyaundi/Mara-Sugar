@@ -1,7 +1,5 @@
-package com.rabitech.ui
+package com.rabitech.ui.login
 
-import android.app.AlertDialog
-import android.app.ProgressDialog
 import android.os.Bundle
 import android.util.Patterns
 import android.view.LayoutInflater
@@ -13,8 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.rabitech.R
 import com.rabitech.dataModels.CustomLoading
+import com.rabitech.dataModels.Users
 import com.rabitech.databinding.FragmentLoginBinding
 import kotlinx.android.synthetic.main.fragment_login.*
 
@@ -25,6 +25,7 @@ class LoginFragment : Fragment() {
 
     private lateinit var mAuth: FirebaseAuth
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var database: FirebaseFirestore
 
     val progressBar = CustomLoading()
 
@@ -37,6 +38,7 @@ class LoginFragment : Fragment() {
             inflater, R.layout.fragment_login, container, false
         )
         mAuth = FirebaseAuth.getInstance()
+        database = FirebaseFirestore.getInstance()
 
         binding.btnLogin.setOnClickListener {
             login()
@@ -49,13 +51,27 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        checkLogedUser()
+        //checkLoggedUser()
     }
 
-    private fun checkLogedUser() {
-        if (mAuth.currentUser != null){
-            findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
+   /* private fun checkLoggedUser() {
+        if (mAuth.currentUser != null) {
+            navigateToCategory()
         }
+    }*/
+
+    private fun navigateToCategory() {
+        database.collection("users").document(mAuth.currentUser!!.uid).get()
+            .addOnSuccessListener { snapshot ->
+                val user = snapshot.toObject(Users::class.java)
+
+                if (user!!.user_category == "admin") {
+                    Toast.makeText(requireContext(), "Admin Login", Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(requireContext(), "User Login", Toast.LENGTH_SHORT).show()
+                    //findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
+                }
+            }
     }
 
 
@@ -81,21 +97,31 @@ class LoginFragment : Fragment() {
         }
 
 
-        progressBar.show(this.requireContext(),"Please wait...")
+        progressBar.show(this.requireContext(), "Please wait...")
 //        binding.progressBar.visibility = View.VISIBLE
         mAuth.signInWithEmailAndPassword(userEmail, userPass).addOnCompleteListener {
             if (it.isSuccessful) {
 
+                /*findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
+                progressBar.loadingDialog.dismiss()*/
+
                 Toast.makeText(activity, "login successful", Toast.LENGTH_LONG).show()
-                findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
-                progressBar.loadingDialog.dismiss()
+                navigateToCategory()
             }
 
         }.addOnFailureListener {
             progressBar.loadingDialog.dismiss()
-            val snack = Snackbar.make(binding.btnSigupLogin,"Wrong Username or Password", Snackbar.LENGTH_LONG)
+            val snack = Snackbar.make(
+                binding.btnSigupLogin,
+                "Wrong Username or Password",
+                Snackbar.LENGTH_LONG
+            )
             snack.show()
-            Toast.makeText(activity, "Login failed No records matching the user details entered .", Toast.LENGTH_LONG).show()
+            Toast.makeText(
+                activity,
+                "Login failed No records matching the user details entered .",
+                Toast.LENGTH_LONG
+            ).show()
         }
     }
 

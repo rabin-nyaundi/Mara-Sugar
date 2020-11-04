@@ -1,14 +1,13 @@
-package com.rabitech.ui
+package com.rabitech.ui.register
 
 import android.os.Bundle
-import android.util.Log
 import android.util.Patterns
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -62,11 +61,12 @@ class RegisterFragment : Fragment() {
             edit_text_pass_register.requestFocus()
             return
         }
+
         mAuth.createUserWithEmailAndPassword(userEmail, userPass).addOnCompleteListener {
             if (it.isSuccessful) {
                 Toast.makeText(activity, "Sign up successful", Toast.LENGTH_LONG).show()
                 createUser()
-                findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
+                //findNavController().navigate(R.id.action_registerFragment_to_loginFragment)
             }
         }.addOnFailureListener {
             Toast.makeText(activity, "Signup faied" + it.message, Toast.LENGTH_LONG).show()
@@ -75,19 +75,24 @@ class RegisterFragment : Fragment() {
     }
 
     private fun createUser() {
+        val currentUser = mAuth.currentUser!!
         val user = Users(
-            mAuth.currentUser!!.email.toString(),"user"
+            currentUser.email.toString(), "user", currentUser.uid
         )
+        mDatabase.collection("users").document(currentUser.uid).set(user)
 
-        mDatabase.collection("Users").add(user).addOnSuccessListener {documentReference->
-            //Toast.makeText(context?.applicationContext,"User added Successfully ${documentReference.id}", Toast.LENGTH_LONG).show()
-            Log.d("@@@@USER CREATION@@@@", "User added Successfully ${documentReference.id}")
+        /*
+            .addOnSuccessListener { _ ->
 
-        }.addOnFailureListener {exception->
-            //Toast.makeText(context?.applicationContext, "User creation failed${exception.localizedMessage}", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext().applicationContext, "Sign Up Successfully", Toast.LENGTH_SHORT).show()
 
-            Log.d("@@@@USER CREATION@@@@", "User creation failed${exception.localizedMessage}")
-        }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(
+                    requireContext(),
+                    "Sign Up Failed: ${exception.localizedMessage}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }*/
     }
 
 }
