@@ -5,5 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface HarvestRequestsService {
 
-    suspend fun getHarvestRequests(caseStatus: String): Flow<List<HarvestRequest>>
+    suspend fun getHarvestRequests(userId: String): Flow<List<HarvestRequest>>
+
+    suspend fun getHarvestRequests(): Flow<List<HarvestRequest>>
 }

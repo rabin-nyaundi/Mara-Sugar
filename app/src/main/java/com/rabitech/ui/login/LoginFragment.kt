@@ -67,9 +67,10 @@ class LoginFragment : Fragment() {
 
                 if (user!!.user_category == "admin") {
                     Toast.makeText(requireContext(), "Admin Login", Toast.LENGTH_SHORT).show()
+                    findNavController().navigate(R.id.action_loginFragment_to_adminFragment)
                 } else {
                     Toast.makeText(requireContext(), "User Login", Toast.LENGTH_SHORT).show()
-                    //findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
+                    findNavController().navigate(R.id.action_loginFragment_to_homeHostFragment)
                 }
             }
     }
@@ -107,6 +108,7 @@ class LoginFragment : Fragment() {
 
                 Toast.makeText(activity, "login successful", Toast.LENGTH_LONG).show()
                 navigateToCategory()
+                progressBar.loadingDialog.dismiss()
             }
 
         }.addOnFailureListener {

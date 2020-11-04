@@ -28,6 +28,9 @@
             app:popExitAnim="@anim/slide_out_right"
             app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
+        <action
+            android:id="@+id/action_loginFragment_to_adminFragment"
+            app:destination="@id/adminFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
@@ -59,4 +62,23 @@
             app:popUpTo="@id/homeHostFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/adminFragment"
+        android:name="com.rabitech.ui.admin.AdminFragment"
+        android:label="AdminFragment"
+        tools:layout="@layout/admin_fragment">
+        <action
+            android:id="@+id/action_adminFragment_to_allHarvestsFragment"
+            app:destination="@id/allHarvestsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allHarvestsFragment"
+        android:name="com.rabitech.ui.allHarvestsAdmin.AllHarvestsFragment"
+        android:label="AllHarvestsFragment"
+        tools:layout="@layout/all_harvests_fragment"/>
+    <fragment
+        android:id="@+id/profileFragment3"
+        android:name="com.rabitech.ui.profile.ProfileFragment"
+        android:label="ProfileFragment"
+        tools:layout="@layout/fragment_profile"/>
 </navigation>

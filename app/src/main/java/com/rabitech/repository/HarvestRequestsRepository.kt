@@ -30,4 +30,23 @@ class HarvestRequestsRepository : HarvestRequestsService {
             }
         }
 
+    override suspend fun getHarvestRequests(): Flow<List<HarvestRequest>> =
+        callbackFlow {
+            val caseDocument = FirebaseFirestore.getInstance()
+                .collection("harvestRequests")
+
+
+            val subscription = caseDocument.addSnapshotListener { value, _ ->
+                value?.let {
+                    val harvestRequests = it.toObjects(HarvestRequest::class.java)
+                    offer(harvestRequests)
+                }
+            }
+
+            //Finally if collect is not in use or collecting any data we cancel this channel to prevent any leak and remove the subscription listener to the database
+            awaitClose {
+                subscription.remove()
+            }
+        }
+
 }
