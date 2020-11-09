@@ -7,15 +7,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.rabitech.dataModels.HarvestRequest
-import com.rabitech.databinding.ItemHarvestHistoryBinding
+import com.rabitech.databinding.ItemHarvestHistoryAdminBinding
 import com.rabitech.ui.allHarvestsAdmin.AllHarvestAdapter.AllHarvestViewHolder.Companion.from
 import com.rabitech.ui.harvestHistory.HarvestHistoryAdapter
 
-class AllHarvestAdapter :
+class AllHarvestAdapter(private val onClickListener: OnClickListener) :
     ListAdapter<HarvestRequest, AllHarvestAdapter.AllHarvestViewHolder>(
         HarvestHistoryAdapter.HarvestHistoryDiffUtil()
-    )
-{
+    ) {
 
     private var isExpanded = false
 
@@ -26,11 +25,14 @@ class AllHarvestAdapter :
     override fun onBindViewHolder(holder: AllHarvestViewHolder, position: Int) {
         val harvestRequest = getItem(position)
         holder.bind(harvestRequest)
+        holder.binding.buttonApprove.setOnClickListener {
+            onClickListener.onClick(harvestRequest)
+        }
         holder.binding.imageExpandDetails.setOnClickListener {
-            if(isExpanded){
+            if (isExpanded) {
                 holder.binding.cardViewHarvestDetails.visibility = View.GONE
                 isExpanded = false
-            }else{
+            } else {
                 holder.binding.cardViewHarvestDetails.visibility = View.VISIBLE
                 isExpanded = true
             }
@@ -39,7 +41,11 @@ class AllHarvestAdapter :
     }
 
 
-    class AllHarvestViewHolder(val binding: ItemHarvestHistoryBinding) :
+    class OnClickListener(val onClickListener: (harvestRequest: HarvestRequest) -> Unit) {
+        fun onClick(harvestRequest: HarvestRequest) = onClickListener(harvestRequest)
+    }
+
+    class AllHarvestViewHolder(val binding: ItemHarvestHistoryAdminBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         fun bind(harvestRequest: HarvestRequest) {
@@ -50,10 +56,10 @@ class AllHarvestAdapter :
         companion object {
             fun from(parent: ViewGroup): AllHarvestViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val itemHarvestHistoryBinding =
-                    ItemHarvestHistoryBinding.inflate(layoutInflater, parent, false)
+                val itemHarvestHistoryAdminBinding =
+                    ItemHarvestHistoryAdminBinding.inflate(layoutInflater, parent, false)
 
-                return AllHarvestViewHolder(itemHarvestHistoryBinding)
+                return AllHarvestViewHolder(itemHarvestHistoryAdminBinding)
             }
         }
 

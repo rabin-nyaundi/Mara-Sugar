@@ -3,6 +3,7 @@ package com.rabitech.ui.allHarvestsAdmin
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
+import com.rabitech.dataModels.HarvestRequest
 import com.rabitech.network.NetworkState
 import com.rabitech.repository.HarvestRequestsRepository
 import kotlinx.coroutines.Dispatchers
@@ -26,5 +27,21 @@ class AllHarvestsViewModel : ViewModel() {
             emit(NetworkState.failed(e.message.toString()))
             Log.e("ERROR:", e.message.toString())
         }
+    }
+
+    fun approveHarvestRequest(request: HarvestRequest) = liveData(Dispatchers.IO) {
+
+        emit(NetworkState.loading())
+
+        try {
+            harvestRequestsRepository.updateHarvestRequestStatus(request).collect {
+                emit(NetworkState.success(it))
+            }
+
+        } catch (e: Exception) {
+            emit(NetworkState.failed(e.message.toString()))
+            Log.e("ERROR:", e.message.toString())
+        }
+
     }
 }

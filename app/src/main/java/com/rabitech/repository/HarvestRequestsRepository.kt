@@ -1,12 +1,16 @@
 package com.rabitech.repository
 
+import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rabitech.dataModels.HarvestRequest
 import com.rabitech.network.HarvestRequestsService
+import com.rabitech.network.NetworkState
+import com.rabitech.util.HarvestStatus
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.tasks.await
 
 @ExperimentalCoroutinesApi
 class HarvestRequestsRepository : HarvestRequestsService {
@@ -15,7 +19,7 @@ class HarvestRequestsRepository : HarvestRequestsService {
         callbackFlow {
             val caseDocument = FirebaseFirestore.getInstance()
                 .collection("harvestRequests")
-                .whereEqualTo("userId",userId)
+                .whereEqualTo("userId", userId)
 
             val subscription = caseDocument.addSnapshotListener { value, _ ->
                 value?.let {
@@ -48,5 +52,25 @@ class HarvestRequestsRepository : HarvestRequestsService {
                 subscription.remove()
             }
         }
+
+    override suspend fun updateHarvestRequestStatus(request: HarvestRequest) =
+        flow<NetworkState<DocumentReference>> {
+            val documentRef = FirebaseFirestore.getInstance()
+                .collection("harvestRequests")
+                .document(request.requestId)
+
+            emit(NetworkState.loading())
+
+            documentRef
+                .update("status", HarvestStatus.APPROVED)
+                .await()
+
+            //Emit success state with post reference
+            emit(NetworkState.success(documentRef))
+        }.catch {
+            // If exception is thrown, emit failed state along with message.
+            emit(NetworkState.failed(it.message.toString()))
+        }.flowOn(Dispatchers.IO)
+
 
 }

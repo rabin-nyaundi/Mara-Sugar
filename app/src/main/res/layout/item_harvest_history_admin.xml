@@ -110,7 +110,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 app:cardUseCompatPadding="true"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -171,9 +171,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
-                        android:layout_marginBottom="8dp"
                         android:padding="10dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/layout_harvest_details_date_planted"
                         app:layout_constraintStart_toStartOf="@+id/layout_harvest_details_constituency"
                         app:layout_constraintTop_toBottomOf="@+id/layout_harvest_details_constituency">
@@ -184,7 +182,7 @@
                             android:layout_height="wrap_content"
                             android:hint="Size"
                             android:padding="10dp"
-                            android:text="@{String.valueOf(harvestRequest.farmDetails.size)}"/>
+                            android:text="@{String.valueOf(harvestRequest.farmDetails.size)}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
@@ -194,6 +192,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
                         android:padding="10dp"
+                        app:layout_constraintBottom_toTopOf="@+id/button_approve"
                         app:layout_constraintEnd_toEndOf="@+id/layout_harvest_details_ward"
                         app:layout_constraintStart_toEndOf="@+id/layout_harvest_details_size"
                         app:layout_constraintTop_toBottomOf="@+id/layout_harvest_details_constituency">
@@ -204,10 +203,19 @@
                             android:layout_height="wrap_content"
                             android:hint="Date Planted"
                             android:padding="10dp"
-                            android:text="@{harvestRequest.farmDetails.datePlanted}"/>
+                            android:text="@{harvestRequest.farmDetails.datePlanted}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
 
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/button_approve"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Approve"
+                        app:layout_constraintEnd_toEndOf="@+id/layout_harvest_details_date_planted"
+                        app:layout_constraintStart_toStartOf="@+id/layout_harvest_details_size"
+                        app:layout_constraintTop_toBottomOf="@+id/layout_harvest_details_size" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
