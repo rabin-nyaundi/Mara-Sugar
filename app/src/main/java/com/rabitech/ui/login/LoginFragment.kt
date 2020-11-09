@@ -51,14 +51,14 @@ class LoginFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        //checkLoggedUser()
+//        checkLoggedUser()
     }
 
-   /* private fun checkLoggedUser() {
-        if (mAuth.currentUser != null) {
+    private fun checkLoggedUser() {
+        if (mAuth.currentUser!= null) {
             navigateToCategory()
         }
-    }*/
+    }
 
     private fun navigateToCategory() {
         database.collection("users").document(mAuth.currentUser!!.uid).get()
@@ -99,7 +99,6 @@ class LoginFragment : Fragment() {
 
 
         progressBar.show(this.requireContext(), "Please wait...")
-//        binding.progressBar.visibility = View.VISIBLE
         mAuth.signInWithEmailAndPassword(userEmail, userPass).addOnCompleteListener {
             if (it.isSuccessful) {
 

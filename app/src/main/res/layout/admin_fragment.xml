@@ -16,10 +16,16 @@
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent">
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/harvest_toolbar"
+                android:layout_marginBottom="8dp"
+                android:background="@color/primary"
+                android:minHeight="?attr/actionBarSize"
+                android:theme="?attr/actionBarTheme"
                 android:layout_width="match_parent"
-                android:title="Admin Home"
+                android:title="Admin Dashboard"
+                app:titleTextColor="@color/icons"
+                app:menu="@menu/sign_out_menu"
                 android:layout_height="match_parent" />
 
         </com.google.android.material.appbar.AppBarLayout>

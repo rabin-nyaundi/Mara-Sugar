@@ -1,4 +1,4 @@
-package com.rabitech.ui
+package com.rabitech.ui.home
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -35,9 +35,6 @@ class HomeFragment : Fragment() {
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_harvestRequsetFragment)
         )
 
-//        binding.harvestRequest.setOnClickListener { view: View ->
-//            view.findNavController().navigate(R.id.action_homeFragment_to_harvestRequsetFragment)
-//        }
         binding.bankAccount.setOnClickListener(
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_bankAccountFragment)
         )
@@ -46,8 +43,8 @@ class HomeFragment : Fragment() {
             Navigation.createNavigateOnClickListener(R.id.action_homeFragment_to_notificationsFragment)
         )
 
-        binding.profile.setOnClickListener {view :View ->
-            view.findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
+        binding.profile.setOnClickListener {
+            findNavController().navigate(R.id.action_homeFragment_to_profileFragment)
         }
 
         return binding.root

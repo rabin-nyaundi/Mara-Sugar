@@ -70,6 +70,12 @@
         <action
             android:id="@+id/action_adminFragment_to_allHarvestsFragment"
             app:destination="@id/allHarvestsFragment" />
+        <action
+            android:id="@+id/action_adminFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_adminFragment_to_profileFragment3"
+            app:destination="@id/profileFragment3" />
     </fragment>
     <fragment
         android:id="@+id/allHarvestsFragment"
@@ -80,5 +86,9 @@
         android:id="@+id/profileFragment3"
         android:name="com.rabitech.ui.profile.ProfileFragment"
         android:label="ProfileFragment"
-        tools:layout="@layout/fragment_profile"/>
+        tools:layout="@layout/fragment_profile">
+        <action
+            android:id="@+id/action_profileFragment3_to_adminFragment"
+            app:destination="@id/adminFragment" />
+    </fragment>
 </navigation>

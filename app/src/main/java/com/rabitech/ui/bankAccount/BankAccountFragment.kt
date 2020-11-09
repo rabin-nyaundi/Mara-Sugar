@@ -19,7 +19,6 @@ import com.rabitech.R
 import com.rabitech.dataModels.BankAccount
 import com.rabitech.dataModels.CustomLoading
 import com.rabitech.databinding.FragmentBankAccountBinding
-import com.rabitech.databinding.FragmentHarvestRequsetBinding
 
 class BankAccountFragment : Fragment() {
 
@@ -111,7 +110,7 @@ class BankAccountFragment : Fragment() {
             .addOnSuccessListener {
 
                 progressBar.loadingDialog.dismiss()
-                loadSnackbar()
+                loadSnackBar()
                 Toast.makeText(
                     activity,
                     "Personal details inserted successfully",
@@ -124,9 +123,10 @@ class BankAccountFragment : Fragment() {
             }
     }
 
-    private fun loadSnackbar() {
+    private fun loadSnackBar() {
         val snack = Snackbar.make(binding.imageView, "Bank Account Added Successfully", Snackbar.LENGTH_LONG)
         snack.show()
+        findNavController().navigate(R.id.action_bankAccountFragment_to_homeFragment)
     }
 
 }

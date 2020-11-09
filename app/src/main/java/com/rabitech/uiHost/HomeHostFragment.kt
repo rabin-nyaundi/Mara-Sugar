@@ -36,14 +36,6 @@ class HomeHostFragment : Fragment(), Toolbar.OnMenuItemClickListener{
 
         mAuth = FirebaseAuth.getInstance()
 
-//        val navHostFragment = childFragmentManager.findFragmentById(R.id.myNavHostHome) as NavHostFragment
-//        NavigationUI.setupWithNavController(binding.toolbar, NavHostFragment.findNavController(this))
-
-//        navHostFragment.navController.addOnNavigateListener{_,destinaton
-//                ->toolbar.title = destinaton.title}
-
-//        val navHostFragment = childFragmentManager.findFragmentById(R.id.myNavHostHome)
-//        NavigationUI.setupWithNavController(binding.toolbar, NavHostFragment.findNavController(this))
 
         val navHostFragment = childFragmentManager.findFragmentById(R.id.myNavHostHome)
         NavigationUI.setupWithNavController(binding.toolbar,navHostFragment!!.findNavController())

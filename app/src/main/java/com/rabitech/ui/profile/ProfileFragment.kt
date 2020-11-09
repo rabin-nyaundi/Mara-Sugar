@@ -122,7 +122,8 @@ class ProfileFragment : Fragment() {
             isValid = false
         }
         if (viewModel.firstName.isNotEmpty() && viewModel.lastName.isNotEmpty() && viewModel.phone.isNotEmpty() && viewModel.email.isNotEmpty()
-            && viewModel.nationalId.isNotEmpty()
+            && viewModel.nationalId.length > 7 && viewModel.nationalId.length < 8
+
         ) {
             isValid = true
         }
@@ -187,7 +188,7 @@ class ProfileFragment : Fragment() {
                     binding.textViewFname.setText(viewModel.firstName)
                     binding.textViewLname.setText(viewModel.lastName)
                     binding.textViewPhone.setText(viewModel.phone)
-                    binding.textViewEmail.setText(viewModel.email)
+                    binding.textViewEmail.setText(user_email)
                     binding.textViewIdNumber.setText(viewModel.nationalId)
 
                     disableField()
@@ -195,7 +196,7 @@ class ProfileFragment : Fragment() {
             }.addOnFailureListener { exception ->
                 Toast.makeText(
                     activity,
-                    "Failed to fetch data from the database" + exception,
+                    "Failed to fetch data from the database$exception",
                     Toast.LENGTH_LONG
                 ).show()
             }

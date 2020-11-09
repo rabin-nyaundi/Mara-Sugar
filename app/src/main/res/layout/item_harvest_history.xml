@@ -15,6 +15,7 @@
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         app:cardUseCompatPadding="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -60,7 +61,7 @@
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/text_harvest_id"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{harvestRequest.requestId}"
                 android:textAlignment="center"
@@ -68,6 +69,16 @@
                 app:layout_constraintStart_toEndOf="@+id/divider"
                 app:layout_constraintTop_toTopOf="@+id/divider"
                 tools:text="XNDSJDSLKDL:SD:LKSL:KD" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Status :"
+                app:layout_constraintEnd_toStartOf="@+id/text_harvest_location"
+                app:layout_constraintHorizontal_bias="0.897"
+                app:layout_constraintStart_toEndOf="@+id/divider"
+                app:layout_constraintTop_toBottomOf="@+id/text_harvest_id" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/text_harvest_location"
@@ -117,6 +128,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="4dp"
+                        android:padding="10dp"
                         app:layout_constraintEnd_toStartOf="@+id/layout_harvest_details_ward"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
@@ -138,6 +150,7 @@
                         android:layout_marginStart="4dp"
                         android:layout_marginTop="4dp"
                         android:layout_marginEnd="8dp"
+                        android:padding="10dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@+id/layout_harvest_details_constituency"
                         app:layout_constraintTop_toTopOf="parent">
@@ -159,6 +172,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="4dp"
                         android:layout_marginBottom="8dp"
+                        android:padding="10dp"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/layout_harvest_details_date_planted"
                         app:layout_constraintStart_toStartOf="@+id/layout_harvest_details_constituency"
@@ -179,6 +193,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
+                        android:padding="10dp"
                         app:layout_constraintEnd_toEndOf="@+id/layout_harvest_details_ward"
                         app:layout_constraintStart_toEndOf="@+id/layout_harvest_details_size"
                         app:layout_constraintTop_toBottomOf="@+id/layout_harvest_details_constituency">
